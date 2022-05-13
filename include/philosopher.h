@@ -1,0 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosopher.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/13 14:33:06 by rokerjea          #+#    #+#             */
+/*   Updated: 2022/05/13 14:33:08 by rokerjea         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PHILOSOPHER_H
+# define PHILOSOPHER_H
+
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <pthread.h>
+# include <string.h>
+
+typedef struct	s_table
+{
+    int philo_count;
+    int philo_life;
+    int philo_meal;
+    int philo_sleep;
+    int philo_max_meal;
+    pthread_mutex_t forks[300];
+}				t_table;
+
+typedef struct	s_philo
+{
+
+}				t_philo;
+
+
+/*
+int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);
+int pthread_join(pthread_t thread, void **retval);
+int pthread_detach(pthread_t thread);
+
+int pthread_mutex_destroy(pthread_mutex_t *mutex);
+int pthread_mutex_init(pthread_mutex_t *restrict mutex, const pthread_mutexattr_t *restrict attr);
+
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void *memset(void *s, int c, size_t n);
+int gettimeofday(struct timeval *tv, struct timezone *tz);
+int usleep(useconds_t usec);
+*/
+
+#endif
