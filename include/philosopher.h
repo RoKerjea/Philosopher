@@ -22,17 +22,21 @@
 
 typedef struct	s_table
 {
-    int philo_count;
-    int philo_life;
-    int philo_meal;
-    int philo_sleep;
-    int philo_max_meal;
-    pthread_mutex_t forks[300];
+	int philo_count;
+	int philo_life;
+	int philo_meal;
+	int philo_sleep;
+	int philo_max_meal;
+	pthread_mutex_t *forks[300];
+	t_philo *philo_list;
 }				t_table;
 
 typedef struct	s_philo
 {
-
+	int	philo_number;
+	pthread_t	thread_id;
+	pthread_mutex_t *left_fork;
+	pthread_mutex_t *right_fork;
 }				t_philo;
 
 
