@@ -20,24 +20,28 @@
 # include <pthread.h>
 # include <string.h>
 
+typedef struct	s_philo
+{
+	int	philo_number;
+	int	last_meal_time;
+	pthread_t	thread_id;
+	pthread_mutex_t *left_fork;
+	pthread_mutex_t *right_fork;
+}				t_philo;
+
 typedef struct	s_table
 {
+	int	start_time;
 	int philo_count;
 	int philo_life;
 	int philo_meal;
 	int philo_sleep;
 	int philo_max_meal;
+	int death;
 	pthread_mutex_t *forks[300];
 	t_philo *philo_list;
 }				t_table;
 
-typedef struct	s_philo
-{
-	int	philo_number;
-	pthread_t	thread_id;
-	pthread_mutex_t *left_fork;
-	pthread_mutex_t *right_fork;
-}				t_philo;
 
 
 /*
