@@ -23,6 +23,7 @@
 typedef struct	s_philo
 {
 	int	philo_number;
+	int	meal_count;
 	struct	timeval last_meal_time;
 	pthread_t	thread_id;
 	pthread_mutex_t *left_fork;
@@ -42,7 +43,17 @@ typedef struct	s_table
 	t_philo *philo_list;
 }				t_table;
 
+/*LIB*/
 
+long			ft_atol(const char *str);
+char			**ft_split(char const *s, char c);
+char			*ft_strdup(const char *s1);
+char			**ft_freetab(char **tab);
+unsigned long	ft_strlen(const char *s);
+
+//PARSING.C//
+
+int	parameter_table(int argc, char **argv, t_table *table);
 
 /*
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);

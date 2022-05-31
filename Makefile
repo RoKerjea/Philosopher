@@ -24,35 +24,28 @@ _IPURPLE=$'\033[45m
 _ICYAN=$'\033[46m
 _IWHITE=$'\033[47m
 
-SRCS		=	srcs/push_swap.c \
-				srcs/mklst.c \
-				srcs/operation.c \
-				srcs/algo.c \
-				srcs/parsing.c \
-				srcs/median.c \
-				srcs/sorted.c \
-				srcs/double_ope.c \
-				srcs/named_ope.c \
-				srcs/quicksort.c \
-				srcs/push.c \
-				srcs/secret_push.c \
-				srcs/push_accessories.c
+SRCS		=	${addprefix srcs/, \
+				philomain.c \
+				parsing.c}
 
-LIB			=	Libft/ft_atol.c \
-				Libft/ft_split.c \
-				Libft/ft_strdup.c \
-				Libft/ft_strlen.c \
-				Libft/ft_freetab.c \
-				Libft/ft_strjoin.c
+LIB			=	${addprefix not_libft/, \
+				ft_atol.c \
+				ft_split.c \
+				ft_strdup.c \
+				ft_strlen.c \
+				ft_freetab.c}
 
-TOTAL = $(SRCS) $(LIB)
-
-HEADER		= include/push_swap.h
+HEADER		= include/philosopher.h
 RM			= rm -rf
-NAME		= push_swap
+NAME		= philo
 CC			= gcc $(CFLAGS)
-OBJECTS		= ${TOTAL:.c=.o}
-DEPEND		= ${TOTAL:.c=.d}
+
+OBJECTS_SRC	= ${SRCS:srcs/%.c=srcs/build/%.o}
+DEPEND_SRC	= ${SRCS:srcs/%.c=srcs/build/%.d}
+OBJECTS_LIB	= ${LIB:not_libft/%.c=not_libft/build/%.o}
+DEPEND_LIB	= ${LIB:not_libft/%.c=not_libft/build/%.d}
+OBJECTS		= $(OBJECTS_SRC) $(OBJECTS_LIB)
+DEPEND		= $(DEPEND_SRC) $(DEPEND_LIB)
 CFLAGS		= -Wall -Werror -Wextra 
 
 ${NAME}:	${OBJECTS}
@@ -64,17 +57,31 @@ ${NAME}:	${OBJECTS}
 
 all:	$(NAME)
 
-%.o: %.c $(HEADER)
+srcs/build/%.o: srcs/%.c $(HEADER)
+	@if [ ! -d "./srcs/build" ]; then\
+		echo "${_UNDER}${_RED}Creating Objects and Dependencies${_END}";\
+		echo "${_BOLD}${_UNDER}${_BLUE}"mkdir -p srcs/build"${_END}";\
+		mkdir -p srcs/build;\
+	fi
 	@echo "${_BOLD}${_BLUE}"$(CC) -MMD -c $< -o $@"${_END}"
 	@$(CC) -MMD -c $< -o $@
 
-#%.d: %.c $(HEADER)
-#	$(CC) -MM -MD -o $@ $<
+not_libft/build/%.o: not_libft/%.c $(HEADER)
+	@if [ ! -d "./not_libft/build" ]; then\
+		echo "${_BOLD}${_UNDER}${_BLUE}"mkdir -p not_libft/build"${_END}";\
+		mkdir -p not_libft/build;\
+	fi
+	@echo "${_BOLD}${_BLUE}"$(CC) -MMD -c $< -o $@"${_END}"
+	@$(CC) -MMD -c $< -o $@
 
 clean:
 	@echo "${_UNDER}${_RED}Deleting Objects and Dependencies${_END}"
 	@echo "${_BOLD}${_YELLOW}"${RM} ${OBJECTS} ${DEPEND}"${_END}"
 	@${RM} ${OBJECTS} ${DEPEND}
+	@echo "${_BOLD}${_YELLOW}"${RM} srcs/build"${_END}"
+	@${RM} srcs/build
+	@echo "${_BOLD}${_YELLOW}"${RM} not_libft/build"${_END}"
+	@${RM} not_libft/build
 
 fclean: clean
 	@echo "${_UNDER}${_RED}Deleting Executable${_END}"
