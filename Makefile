@@ -88,6 +88,11 @@ fclean: clean
 	@echo "${_BOLD}${_RED}"${RM} ${NAME}"${_END}"
 	@${RM} ${NAME}
 
+git: fclean
+	git add .
+	git commit
+	git push
+
 re:			fclean all
 
 # ================================ #
