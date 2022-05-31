@@ -23,7 +23,7 @@
 typedef struct	s_philo
 {
 	int	philo_number;
-	int	last_meal_time;
+	struct	timeval last_meal_time;
 	pthread_t	thread_id;
 	pthread_mutex_t *left_fork;
 	pthread_mutex_t *right_fork;
@@ -31,7 +31,7 @@ typedef struct	s_philo
 
 typedef struct	s_table
 {
-	int	start_time;
+	struct	timeval start_time;
 	int philo_count;
 	int philo_life;
 	int philo_meal;

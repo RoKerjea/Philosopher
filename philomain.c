@@ -13,10 +13,22 @@
 #include "./include/philosopher.h"
 
 philo_eat()
+{
+	messagefork1;
+	messagefork2;
+	messagestarteating;
+	gettimeofday(philo->last_meal_time, 0);
+	releasefork2;
+	releasefork1;
+}
 
 philo_sleep()
-
-philo_think()
+{
+	checkifsleepdeath
+	//print message sleep
+	usleep(table->philo_sleep);
+	//print message think
+}
 
 int	stop_condition()
 {
@@ -37,10 +49,21 @@ philoroutine()
 		if (stop_condition == 0)
 			philo_eat();
 		if (stop_condition == 0)
-			philo_slepp();
+			philo_sleep();
 		if (stop_condition == 0)
 			philo_think();
 	}
+}
+
+void	parameter_table(int argc, char *argv, t_table *table)
+{
+	table->philo_count = argv[1];
+	table->philo_life = argv[2];
+	table->philo_meal = argv[3];
+	table->philo_sleep = argv[4];
+	if (argc == 6)
+		table->philo_max_meal = argv[5];
+	gettimeofday(&table->start_time, 0);	
 }
 
 void    main(int argc, char *argv)
