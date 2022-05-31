@@ -88,9 +88,16 @@ fclean: clean
 	@echo "${_BOLD}${_RED}"${RM} ${NAME}"${_END}"
 	@${RM} ${NAME}
 
-git: fclean
+gitm: fclean
 	git add .
 	git commit
+	git push
+
+TIME = `date +"%d/%m/%Y %Hh%M %Z"`
+
+git: fclean
+	git add .
+	git commit -m "$(TIME)"
 	git push
 
 re:			fclean all
