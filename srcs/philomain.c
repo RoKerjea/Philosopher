@@ -67,6 +67,15 @@ void	testparam(t_table *table)
 	exit(0);
 }
 
+void	*ft_start_thread(void *ptr)
+{
+	t_table table;
+
+	table = (t_table *) ptr;
+	//assign fork;
+	//start routine;
+}
+
 void	create_start_philo(t_table *table)
 {
 	int	i;
@@ -76,12 +85,11 @@ void	create_start_philo(t_table *table)
 	//protect
 	while (i + 1 < table->philo_count)
 	{
-		if (pthread_create(table->philo_list[i].thread_id, NULL, ft_start_thread(table), table) == 0)
+		//give philo number = i + 1
+		if (pthread_create(table->philo_list[i].thread_id, NULL, ft_start_thread, table) == 0)
 			//protect
 		table->philo_list[i].left_fork = table->forks[i];
 		table->philo_list[i].right_fork = table->forks[i + 1];
-		//start routine(thread_id)?
-		//give number = i + 1
 		i++;
 	}
 	pthread_create(table->philo_list[i].thread_id, x, x, x);
