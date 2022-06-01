@@ -69,37 +69,35 @@ void	testparam(t_table *table)
 
 void	*ft_start_thread(void *ptr)
 {
-	t_table table;
+	t_table *table;
 
 	table = (t_table *) ptr;
-	//assign fork;
 	//start routine;
 }
 
-void	create_start_philo(t_table *table)
+int	create_start_philo(t_table *table)
 {
 	int	i;
 
 	i = 0;
 	table->philo_list = malloc(sizeof(t_philo) * (table->philo_count + 1));
-	//protect
-	while (i + 1 < table->philo_count)
+	if (table->philo_life == NULL)
+		return(-1);
+	while (i < table->philo_count)
 	{
-		//give philo number = i + 1
-		if (pthread_create(table->philo_list[i].thread_id, NULL, ft_start_thread, table) == 0)
-			//protect
 		table->philo_list[i].left_fork = table->forks[i];
-		table->philo_list[i].right_fork = table->forks[i + 1];
+		if (i + 1 > table->philo_count)
+			table->philo_list[i].right_fork = table->forks[0];
+		else
+			table->philo_list[i].right_fork = table->forks[i + 1];
+		table->philo_list[i].philo_number = i;
+		if (pthread_create(table->philo_list[i].thread_id, NULL, ft_start_thread, table) == 0)
+			return (-1);
 		i++;
 	}
-	pthread_create(table->philo_list[i].thread_id, x, x, x);
-	table->philo_list[i].left_fork = table->forks[i];
-	table->philo_list[i].right_fork = table->forks[0];
-	//start routine?
-	//give number = i + 1
 }
 
-int    main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int i;
 
@@ -116,13 +114,13 @@ int    main(int argc, char **argv)
 		i++;
 	}
 	testparam(&table);
-	create_start_philo(&table);
-	/*
+	if (create_start_philo(&table) == -1)
+		return (0);
 	i = 0;
-	while (i < table->philo_count)
+	while (i < table.philo_count)
 	{
-		pthread_join(table->philo_list[i].thread_id, 0);
+		pthread_join(table.philo_list[i].thread_id, 0);
 		i++;
-	}*/
+	}
 	return (0);
 }
