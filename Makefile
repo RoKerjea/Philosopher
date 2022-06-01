@@ -46,7 +46,7 @@ OBJECTS_LIB	= ${LIB:not_libft/%.c=not_libft/build/%.o}
 DEPEND_LIB	= ${LIB:not_libft/%.c=not_libft/build/%.d}
 OBJECTS		= $(OBJECTS_SRC) $(OBJECTS_LIB)
 DEPEND		= $(DEPEND_SRC) $(DEPEND_LIB)
-CFLAGS		= -Wall -Werror -Wextra
+CFLAGS		= -Wall -Werror -Wextra -lpthread -pthread
 
 ${NAME}:	${OBJECTS}
 	@echo "${_UNDER}${_RED}Creating Executable${_END}"

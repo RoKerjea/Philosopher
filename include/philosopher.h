@@ -28,6 +28,7 @@ typedef struct	s_philo
 	pthread_t	thread_id;
 	pthread_mutex_t *left_fork;
 	pthread_mutex_t *right_fork;
+	t_table	*table;
 }				t_philo;
 
 typedef struct	s_table
