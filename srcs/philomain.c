@@ -31,6 +31,16 @@ int	philo_sleep()
 	//print message think
 }
 */
+
+int	check_last_meal_time(t_philo *philo)
+{
+	struct timeval now;
+
+	gettimeofday(&philo->last_meal_time, 0);
+	
+	return (1);
+}
+
 int	stop_condition(t_philo *philo)
 {
 	if (philo->table->death == 1)
