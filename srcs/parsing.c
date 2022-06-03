@@ -65,7 +65,8 @@ int	parameter_table(int argc, char **argv, t_table *table)
 		table->philo_max_meal = ft_atol(argv[5]);
 	else
 		table->philo_max_meal = -1;
-	gettimeofday(&table->start_time, 0);
+	//create a long long to get time of day and compare in futur;
+	//gettimeofday(&table->start_time, 0);
 	//ft_freetab(input);
 	return (1);
 }

@@ -39,8 +39,9 @@ typedef struct	s_table
 	int philo_meal;
 	int philo_sleep;
 	int philo_max_meal;
-	int death;
+	pthread_mutex_t	death;
 	pthread_mutex_t *forks[300];
+	pthread_mutex_t print;
 	t_philo *philo_list;
 }				t_table;
 

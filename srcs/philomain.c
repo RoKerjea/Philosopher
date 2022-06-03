@@ -13,42 +13,65 @@
 #include "../include/philosopher.h"
 
 /*
-int	philo_eat()
+void	philo_eat(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->table->print);
 	messagefork1;
+	pthread_mutex_unlock(&philo->table->print);
+	pthread_mutex_lock(&philo->table->print);
 	messagefork2;
 	messagestarteating;
-	gettimeofday(philo->last_meal_time, 0);
+	pthread_mutex_unlock(&philo->table->print);
+
+	//timestamp_long_long(philo->lastmeal_time)
+	usleep(philo->table->philo_meal);
+
+	pthread_mutex_lock(&philo->table->print);
 	releasefork2;
 	releasefork1;
+	pthread_mutex_unlock(&philo->table->print);
 }
 
-int	philo_sleep()
+int	philo_sleep(t_philo *philo)
 {
-	checkifsleepdeath
+	if (checkifsleepdeath)
+		return (0);
+	pthread_mutex_lock(&philo->table->print);
 	//print message sleep
-	usleep(table->philo_sleep);
+	pthread_mutex_unlock(&philo->table->print);
+	usleep(philo->table->philo_sleep);
+	pthread_mutex_lock(&philo->table->print);
 	//print message think
+	pthread_mutex_unlock(&philo->table->print);
+	return (0);
 }
 */
 
 int	check_last_meal_time(t_philo *philo)
 {
-	struct timeval now;
-
-	gettimeofday(&philo->last_meal_time, 0);
-	
+	struct timeval *now;
+	gettimeofday(&now, 0);
+	//transform in long long before comparaison with last_meal_time;
+	if (now - last >= philo_life)
+	{
+		death;
+		return (-1);
+	}
 	return (1);
 }
 
 int	stop_condition(t_philo *philo)
 {
-	if (philo->table->death == 1)
+	if (&philo->table->death == 1)
 		return (-1);
 	if (check_last_meal_time(philo) == -1)
 	{
-		//print "timestamp_in_ms X died";
+		pthread_mutex_lock(&philo->table->print);
+		printf ("philo n%d died\n", philo->philo_number);
+		pthread_mutex_unlock(&philo->table->print);
+		pthread_mutex_lock(&philo->table->death);
 		philo->table->death = 1;
+		pthread_mutex_unlock(&philo->table->death);
 		return (-1);
 	}
 	return (1);
@@ -70,7 +93,9 @@ void	*ft_start_thread(void *ptr)
 	t_philo *philo;
 
 	philo = (t_philo *) ptr;
+	pthread_mutex_lock(philo->table->print);
 	printf ("this is philo n%d\n", philo->philo_number);
+	pthread_mutex_unlock(philo->table->print);
 	while(stop_condition(philo) == 1)
 	{
 		if (stop_condition == 1)
@@ -80,7 +105,7 @@ void	*ft_start_thread(void *ptr)
 		if (stop_condition == 1)
 			philo_think();
 	}
-	return (0);
+	return ;
 }
 
 int	create_start_philo(t_table *table)
@@ -138,3 +163,9 @@ int	main(int argc, char **argv)
 	}*/
 	return (0);
 }
+/*TO_DO
+elements of routine
+timestamp converted to long long
+death check and write with mutex
+
+*/
