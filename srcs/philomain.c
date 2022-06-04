@@ -12,49 +12,70 @@
 
 #include "../include/philosopher.h"
 
-/*
 void	philo_eat(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->left_fork);
 	pthread_mutex_lock(&philo->table->print);
-	messagefork1;
+	printf ("%lld philo n%d has taken a fork\n", runtime (philo->table), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
+	pthread_mutex_lock(&philo->right_fork);
 	pthread_mutex_lock(&philo->table->print);
-	messagefork2;
-	messagestarteating;
+	printf ("%lld philo n%d has taken a fork\n", runtime (philo->table), philo->philo_number);
+	printf ("%lld philo n%d is eating\n", runtime (philo->table), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
+	philo->last_meal = timestamp_ms();
+	usleep(philo->table->philo_meal * 1000);
+	pthread_mutex_unlock(&philo->left_fork);
+	pthread_mutex_unlock(&philo->right_fork);
+	pthread_mutex_lock(&philo->table->print);
+	printf ("%lld philo n%d has released a fork\n", runtime (philo->table), philo->philo_number);
+	printf ("%lld philo n%d has released a fork\n", runtime (philo->table), philo->philo_number);
+	pthread_mutex_unlock(&philo->table->print);
+}
 
-	//timestamp_long_long(philo->lastmeal_time)
-	usleep(philo->table->philo_meal);
-
-	pthread_mutex_lock(&philo->table->print);
-	releasefork2;
-	releasefork1;
-	pthread_mutex_unlock(&philo->table->print);
+int	check_sleepdeath(t_philo *philo)
+{
+	if (philo->table->philo_sleep > philo->last_meal + philo->table->philo_life)
+	{
+		pthread_mutex_lock(&philo->table->print);
+		printf ("%lld philo n%d is sleeping\n", runtime (philo->table), philo->philo_number);
+		pthread_mutex_unlock(&philo->table->print);
+		usleep(philo->table->philo_life - (timestamp_ms() - philo->last_meal));
+		pthread_mutex_lock(&philo->table->print);
+		printf ("%lld philo %d died\n", runtime (philo->table), philo->philo_number);
+		pthread_mutex_unlock(&philo->table->print);
+		if (philo->table->death == 0)
+		{
+			pthread_mutex_lock(&philo->table->death_auth);
+			philo->table->death = 1;
+			pthread_mutex_unlock(&philo->table->death_auth);
+		}
+		return (1);
+	}
+	return (0);
 }
 
 int	philo_sleep(t_philo *philo)
 {
-	if (checkifsleepdeath)
+	if (check_sleepdeath(philo) == 1)
 		return (0);
 	pthread_mutex_lock(&philo->table->print);
-	//print message sleep
+	printf ("%lld philo n%d is sleeping\n", runtime (philo->table), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
-	usleep(philo->table->philo_sleep);
+	usleep(philo->table->philo_sleep * 1000);
 	pthread_mutex_lock(&philo->table->print);
-	//print message think
+	printf ("%lld philo n%d is thinking\n", runtime (philo->table), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
 	return (0);
 }
-*/
 
 int	check_last_meal_time(t_philo *philo)
 {
-	struct timeval *now;
-	gettimeofday(&now, 0);
-	//transform in long long before comparaison with last_meal_time;
-	if (now - last >= philo_life)
+	long long	now;
+
+	now = timestamp_ms();
+	if (now - philo->last_meal >= philo->table->philo_life)
 	{
-		death;
 		return (-1);
 	}
 	return (1);
@@ -67,16 +88,16 @@ int	stop_condition(t_philo *philo)
 	if (check_last_meal_time(philo) == -1)
 	{
 		pthread_mutex_lock(&philo->table->print);
-		printf ("philo n%d died\n", philo->philo_number);
+		printf ("%lld philo %d died\n", runtime (philo->table), philo->philo_number);
 		pthread_mutex_unlock(&philo->table->print);
-		pthread_mutex_lock(&philo->table->death);
+		pthread_mutex_lock(&philo->table->death_auth);
 		philo->table->death = 1;
-		pthread_mutex_unlock(&philo->table->death);
+		pthread_mutex_unlock(&philo->table->death_auth);
 		return (-1);
 	}
 	return (1);
 }
-
+/*
 void	testparam(t_table *table)
 {
 	printf("number of philo = %d\n", table->philo_count);
@@ -86,24 +107,22 @@ void	testparam(t_table *table)
 	printf("max meal = %d\n", table->philo_max_meal);
 
 	return ;
-}
+}*/
 
 void	*ft_start_thread(void *ptr)
 {
 	t_philo *philo;
 
 	philo = (t_philo *) ptr;
-	pthread_mutex_lock(philo->table->print);
+	pthread_mutex_lock(&philo->table->print);
 	printf ("this is philo n%d\n", philo->philo_number);
-	pthread_mutex_unlock(philo->table->print);
+	pthread_mutex_unlock(&philo->table->print);
 	while(stop_condition(philo) == 1)
 	{
 		if (stop_condition == 1)
-			philo_eat();
+			philo_eat(philo);
 		if (stop_condition == 1)
-			philo_sleep();
-		if (stop_condition == 1)
-			philo_think();
+			philo_sleep(philo);
 	}
 	return ;
 }
@@ -142,30 +161,26 @@ int	main(int argc, char **argv)
 	t_table table;
 	if (argc < 5 || argc > 6)
 		return (0);
-	printf("gate 3\n");
 	if (parameter_table(argc, argv, &table) == -1)
 		return (0);
-	printf("gate 4\n");
 	while (i < table.philo_count)
 	{
 		pthread_mutex_init(table.forks[i], 0);
 		i++;
 	}
 	printf("gate 5\n");
-	testparam(&table);
+	//testparam(&table);
 	if (create_start_philo(&table) == -1)
 		return (0);
-	//i = 0;
-	/*while (i < table.philo_count)
+	i = 0;
+	while (i < table.philo_count)
 	{
 		pthread_join(table.philo_list[i].thread_id, 0);
 		i++;
-	}*/
+	}
 	return (0);
 }
 /*TO_DO
 elements of routine
-timestamp converted to long long
 death check and write with mutex
-
 */

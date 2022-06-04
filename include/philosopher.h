@@ -24,7 +24,7 @@ typedef struct	s_philo
 {
 	int	philo_number;
 	int	meal_count;
-	struct	timeval last_meal_time;
+	long long	last_meal;
 	pthread_t	thread_id;
 	pthread_mutex_t *left_fork;
 	pthread_mutex_t *right_fork;
@@ -33,13 +33,14 @@ typedef struct	s_philo
 
 typedef struct	s_table
 {
-	struct	timeval start_time;
+	long long	start_time;
 	int philo_count;
 	int philo_life;
 	int philo_meal;
 	int philo_sleep;
 	int philo_max_meal;
-	pthread_mutex_t	death;
+	int	death;
+	pthread_mutex_t	death_auth;
 	pthread_mutex_t *forks[300];
 	pthread_mutex_t print;
 	t_philo *philo_list;
@@ -56,6 +57,8 @@ unsigned long	ft_strlen(const char *s);
 //PARSING.C//
 
 int	parameter_table(int argc, char **argv, t_table *table);
+long long	timestamp_ms();
+long long	runtime(t_table *table);
 
 /*
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);

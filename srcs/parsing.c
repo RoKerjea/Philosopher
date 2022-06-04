@@ -40,9 +40,26 @@ int	checkarg(char *str)
 	return (1);
 }
 
+long long timestamp_ms()
+{
+	struct	timeval time_now;
+	long long	res;
+
+	gettimeofday(&time_now, 0);
+	res = time_now.tv_sec * 1000 + time_now.tv_usec / 1000;
+	return (res);
+}
+
+long long	runtime(t_table *table)
+{
+	long long	res;
+
+	res = timestamp_ms() - table->start_time;
+	return (res);
+}
+
 int	parameter_table(int argc, char **argv, t_table *table)
 {
-
 	printf("gate 2\n");
 	int	i;
 
@@ -65,8 +82,10 @@ int	parameter_table(int argc, char **argv, t_table *table)
 		table->philo_max_meal = ft_atol(argv[5]);
 	else
 		table->philo_max_meal = -1;
-	//create a long long to get time of day and compare in futur;
-	//gettimeofday(&table->start_time, 0);
-	//ft_freetab(input);
+
+	pthread_mutex_lock(&table->death_auth);
+	table->death = 0;
+	pthread_mutex_unlock(&table->death_auth);
+	table->start_time = timestamp_ms();
 	return (1);
 }
