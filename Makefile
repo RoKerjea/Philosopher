@@ -102,28 +102,4 @@ git: fclean
 
 re:			fclean all
 
-# ================================ #
-# ========== MAKE BONUS ========== #
-# ================================ #
-
-NAMEB		= checker
-SRCSB		= bonus/srcs/checker.c bonus/libft/ft_split.c bonus/libft/ft_strdup.c bonus/srcs/command_parsing.c
-SRCSB		:= $(SRCSB) bonus/srcs/parsing.c bonus/srcs/operation.c bonus/srcs/sorted.c bonus/srcs/mklst.c
-SRCSB		:= $(SRCSB) bonus/libft/ft_strlen.c bonus/libft/ft_freetab.c bonus/libft/ft_strjoin.c bonus/libft/ft_atol.c
-OBJECTSB	= ${SRCSB:.c=.o}
-
-${NAMEB}:	${OBJECTSB} 
-			${CC} -o ${NAMEB} ${OBJECTSB}
-
-bonus:		${NAMEB}
-
-cleanb:
-	${RM} ${OBJECTSB}
-
-fcleanb:
-	${RM} ${OBJECTSB}
-	${RM} ${NAMEB}
-
-reb:		fcleanb bonus
-
 .PHONY:		all clean fclean re bonus reb

@@ -21,14 +21,22 @@
 # include <string.h>
 
 typedef struct	s_philo
-{
+{	
+	long long	start_time;
+	int philo_count;
+	int philo_life;
+	int philo_meal;
+	int philo_sleep;
+	int philo_max_meal;
 	int	philo_number;
 	int	meal_count;
 	long long	last_meal;
 	pthread_t	thread_id;
 	pthread_mutex_t *left_fork;
 	pthread_mutex_t *right_fork;
-	t_table	*table;
+	pthread_mutex_t print;
+	pthread_mutex_t	death_auth;
+	struct s_table	*table;
 }				t_philo;
 
 typedef struct	s_table
@@ -41,9 +49,9 @@ typedef struct	s_table
 	int philo_max_meal;
 	int	death;
 	pthread_mutex_t	death_auth;
-	pthread_mutex_t *forks[300];
+	pthread_mutex_t forks[300];
 	pthread_mutex_t print;
-	t_philo *philo_list;
+	struct s_philo *philo_list;
 }				t_table;
 
 /*LIB*/
@@ -58,7 +66,7 @@ unsigned long	ft_strlen(const char *s);
 
 int	parameter_table(int argc, char **argv, t_table *table);
 long long	timestamp_ms();
-long long	runtime(t_table *table);
+long long	runtime(t_philo *philo);
 
 /*
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);
