@@ -94,10 +94,11 @@ gitm: fclean
 	git push
 
 TIME = `date +"%d/%m/%Y %Hh%M %Z"`
+USER = `env | grep USER | tail "--bytes=+6"`
 
 git: fclean
 	git add .
-	git commit -m "$(TIME)"
+	git commit -m "by $(USER) at $(TIME)"
 	git push
 
 re:			fclean all
