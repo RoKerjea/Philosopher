@@ -223,4 +223,12 @@ int	main(int argc, char **argv)
 /*TO_DO
 elements of routine
 death check and write with mutex
+thread moniteur de status pour savoir si il ya raison de stop
+un pour verifier philo par philo, si il y a un mort de faim(datarace possible si check and edit of last meal time simultaneous)
+et un pour verifier si TOUT les philos ont mange leurs dernier repas et ENSUITE editer stop_condition = 1
+Donc
+les philos n'ont plus a se preocupper eux meme de savoir si ils ont atteint leurs max de repas
+NI
+de savoir si ils viennent de mourir
+uniquement de verifier si stop_condition == 1 en arreter tout ou continuer normalement
 */
