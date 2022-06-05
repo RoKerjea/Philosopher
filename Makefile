@@ -94,7 +94,8 @@ gitm: fclean
 	git push
 
 TIME = `date +"%d/%m/%Y %Hh%M %Z"`
-USER = `env | grep USER | tail --bytes=+6`
+#USER = `env | grep USER | tail --bytes=+6`
+USER := $(shell env | grep USER | tail --bytes=+6)
 
 test:
 	echo ${USER}
