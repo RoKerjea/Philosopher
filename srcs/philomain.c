@@ -88,7 +88,7 @@ int	check_last_meal_time(t_philo *philo)
 {
 	long long	now;
 
-	now = timestamp_ms();
+	now = runtime(philo);
 	if (now - philo->last_meal >= philo->philo_life)
 	{
 		return (-1);
@@ -100,15 +100,15 @@ int	stop_condition(t_philo *philo)
 {
 	testparam(philo->table);
 	pthread_mutex_lock(&philo->death_auth);
-	printf("gatex0\n");
+	//printf("gatex0\n");
 	if (philo->table->death == 1)
 		return (-1);
-	printf("gatex00\n");
+	//printf("gatex00\n");
 	pthread_mutex_unlock(&philo->death_auth);
-	printf("gatex1\n");
+	//printf("gatex1\n");
 	if (philo->meal_count == philo->philo_max_meal)
 		return (-1);
-	printf("gatex2\n");
+	//printf("gatex2\n");
 	if (check_last_meal_time(philo) == -1)
 	{
 		pthread_mutex_lock(&philo->table->print);
