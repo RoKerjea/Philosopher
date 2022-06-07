@@ -50,7 +50,7 @@ long long	timestamp_ms(void)
 	return (res);
 }
 
-long long	runtime(t_philo *philo)
+long long	runtime(struct s_philo *philo)
 {
 	long long	res;
 

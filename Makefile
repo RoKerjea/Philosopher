@@ -93,14 +93,18 @@ gitm: fclean
 	git commit
 	git push
 
-TIME = `date +"%d/%m/%Y %Hh%M %Z"`
+VER_H = include/Version_philo.h
 USER := $(shell env | grep USER | tail --bytes=+6)
+TIME=$(shell date +"%d %m %Y %Hh%M %Z")
 
 git: fclean
+	$(eval MIN=$(shell expr $$(awk '/#define MINOR_VERSION/' $(VER_H) | tr -cd "[0-9]") + 1))
+	$(eval MAJ=$(shell expr $$(awk '/#define MAJOR_VERSION/' $(VER_H) | tr -cd "[0-9]")))
+	sed -i 's/#define MINOR_VERSION .*/#define MINOR_VERSION \"$(MIN)\"/' $(VER_H)
+	sed -i 's/#define BUILD_DATE .*/#define BUILD_DATE $(TIME)/' $(VER_H)
 	git add .
-	git commit -m "by $(USER) at $(TIME)"
+	git commit -m "V$(MAJ).$(MIN) by $(USER) at $(TIME)"
 	git push
-
 re:			fclean all
 
 .PHONY:		all clean fclean re bonus reb

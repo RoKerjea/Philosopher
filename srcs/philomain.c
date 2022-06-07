@@ -87,18 +87,20 @@ int	philo_sleep(t_philo *philo)
 int	check_last_meal_time(t_philo *philo)
 {
 	long long	now;
+	int res;
 
 	now = runtime(philo);
+	res = 1;
+	//need mutex_lock() for writing/reading lastmeal time
 	if (now - philo->last_meal >= philo->philo_life)
-	{
-		return (-1);
-	}
-	return (1);
+		res = -1;
+	//need mutex_unlock() for writing/reading lastmeal time
+	return (res);
 }
 
 int	stop_condition(t_philo *philo)
 {
-	testparam(philo->table);
+	//testparam(philo->table);
 	pthread_mutex_lock(&philo->death_auth);
 	//printf("gatex0\n");
 	if (philo->table->death == 1)
@@ -130,19 +132,19 @@ void	ft_test_philo_data(t_philo *philo)
 	printf("max meal = %d\n", philo->philo_max_meal);
 	return ;
 }
-void	*ft_start_thread(void *ptr)
+void	*ft_start_thread_philo(void *ptr)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *) ptr;
-	ft_test_philo_data(philo);
+	//ft_test_philo_data(philo);
 	/*if (philo->philo_number % 2 == 1)
 		usleep(philo->philo_meal / 10);*/
-	printf("gatex\n");
+	//printf("gatex\n");
 	pthread_mutex_lock(&philo->print);
-	printf ("this is philo n%d\n", philo->philo_number);
+	//printf ("this is philo n%d\n", philo->philo_number);
 	pthread_mutex_unlock(&philo->print);
-	printf("gatexy\n");
+	//printf("gatexy\n");
 	while (stop_condition(philo) == 1)
 	{
 		if (stop_condition(philo) == 1)
@@ -151,6 +153,57 @@ void	*ft_start_thread(void *ptr)
 			philo_sleep(philo);
 	}
 	return (NULL);
+}
+
+void	*ft_start_thread_chap_one(void *ptr)
+{
+	t_table	*table;
+	int x;
+
+	x = 0;
+	table = (t_table *) ptr;
+	while (1)
+	{
+		while (x <= table->philo_count)//nearly forever or just until end_condition == 1
+		{	//!pb, need to mutex lock for access to condition
+			if (check_last_meal_time(&table->philo_list[x]) == -1)
+			{
+				pthread_mutex_lock(&table->print);
+				printf ("%lld philo %d died\n", runtime (&table->philo_list[x]), x + 1);
+				pthread_mutex_unlock(&table->print);
+				pthread_mutex_lock(&table->death_auth);
+				table->death = 1;
+				pthread_mutex_unlock(&table->death_auth);
+				return ;//?
+			}
+			x++;
+		}
+		//possible need for usleep??
+		x = 1;
+	}
+}
+
+//moniteur de nombre de repas pour tout les philos
+void	*ft_start_thread_chap_two(void *ptr)
+{
+	t_table	*table;
+	int x;
+
+	x = 0;
+	table = (t_table *) ptr;
+	while (x <= table->philo_count)//check end_condition in case the other thread monitor find a death
+	{
+		//need mutex_lock for reading number of meal;
+		if (table->philo_list[x].meal_count >= table->philo_max_meal)
+			x++;
+		else
+			usleep(100);//to tweak
+	}
+	pthread_mutex_lock(&table->death_auth);
+	if (table->death != 1)
+		table->death = 1;
+	pthread_mutex_unlock(&table->death_auth);
+	return ;
 }
 
 int	create_start_philo(t_table *table)
@@ -177,7 +230,7 @@ int	create_start_philo(t_table *table)
 		table->philo_list[i].death_auth = table->death_auth;
 		table->philo_list[i].table = table;
 		//assign param from table to philo
-		if (pthread_create(&table->philo_list[i].thread_id, NULL, ft_start_thread, &table->philo_list[i]) != 0)
+		if (pthread_create(&table->philo_list[i].thread_id, NULL, ft_start_thread_philo, &table->philo_list[i]) != 0)
 			return (-1);
 		printf("philo %d created\n", i + 1);
 		i++;
@@ -223,7 +276,8 @@ int	main(int argc, char **argv)
 /*TO_DO
 elements of routine
 death check and write with mutex
-thread moniteur de status pour savoir si il ya raison de stop
+
+thread moniteur de status pour savoir si il ya raison de stop :
 un pour verifier philo par philo, si il y a un mort de faim(datarace possible si check and edit of last meal time simultaneous)
 et un pour verifier si TOUT les philos ont mange leurs dernier repas et ENSUITE editer stop_condition = 1
 Donc

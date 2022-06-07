@@ -66,7 +66,7 @@ unsigned long	ft_strlen(const char *s);
 
 int	parameter_table(int argc, char **argv, t_table *table);
 long long	timestamp_ms();
-long long	runtime(t_philo *philo);
+long long	runtime(struct s_philo *philo);
 
 /*
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);
