@@ -45,7 +45,7 @@ int	create_start_philo(t_table *table) //TO NORM
 	return (1);
 }
 
-int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION
+int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION(possibly steps for parameter, mutex, thread, join and free & delete)
 {
 	t_table	table;
 	int		i;

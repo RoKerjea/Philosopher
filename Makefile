@@ -26,6 +26,11 @@ _IWHITE=$'\033[47m
 
 SRCS		=	${addprefix srcs/, \
 				philomain.c \
+				philo_loop.c \
+				time.c \
+				thread_monitor.c \
+				mutex_print.c \
+				test .c \
 				parsing.c}
 
 LIB			=	${addprefix not_libft/, \

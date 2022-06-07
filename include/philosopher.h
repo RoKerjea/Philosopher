@@ -79,6 +79,13 @@ void			*ft_meal_monitor_thread(void *ptr);
 int				stop_condition(t_philo *philo);
 void			*ft_start_thread_philo(void *ptr);
 
+//MUTEX_PRINT.C
+
+void			ft_mutex_print_sleep(t_philo *philo);
+void			ft_mutex_print_fork(t_philo *philo);
+void			ft_mutex_print_think(t_philo *philo);
+void			ft_mutex_print_eating(t_philo *philo);
+
 //TO DELETE
 void			testparam(t_table *table);
 void			ft_test_philo_data(t_philo *philo);

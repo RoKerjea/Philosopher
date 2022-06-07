@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_loop.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/07 19:58:04 by rokerjea          #+#    #+#             */
+/*   Updated: 2022/06/07 19:58:08 by rokerjea         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/philosopher.h"
 
 //make function for lock and print messages
@@ -24,6 +36,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->table->print);*/
 }
 
+/*????
 int	check_sleepdeath(t_philo *philo)//can it be completly replaced by thread monitor?
 {
 	if (philo->philo_sleep > philo->last_meal + philo->philo_life)
@@ -44,14 +57,14 @@ int	check_sleepdeath(t_philo *philo)//can it be completly replaced by thread mon
 		return (1);
 	}
 	return (0);
-}
+}*/
 
 //make function for lock and print messages
 //check end_condition before starting every step
 int	philo_sleep(t_philo *philo)
 {
-	if (check_sleepdeath(philo) == 1)
-		return (0);
+	/*if (check_sleepdeath(philo) == 1)
+		return (0);*/
 	pthread_mutex_lock(&philo->table->print);
 	printf ("%lld philo n%d is sleeping\n", runtime (philo), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
