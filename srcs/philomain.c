@@ -48,7 +48,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->table->print);*/
 }
 
-int	check_sleepdeath(t_philo *philo)
+int	check_sleepdeath(t_philo *philo)//can it be completly replaced by thread monitor?
 {
 	if (philo->philo_sleep > philo->last_meal + philo->philo_life)
 	{
@@ -78,6 +78,8 @@ int	philo_sleep(t_philo *philo)
 	printf ("%lld philo n%d is sleeping\n", runtime (philo), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
 	usleep(philo->philo_sleep * 1000);
+	//check endcondition before next task, if death_monitor did his job,
+	//no need for philo_thread to check himself if death during sleep
 	pthread_mutex_lock(&philo->table->print);
 	printf ("%lld philo n%d is thinking\n", runtime (philo), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
@@ -100,29 +102,14 @@ int	check_last_meal_time(t_philo *philo)
 
 int	stop_condition(t_philo *philo)
 {
-	//testparam(philo->table);
 	pthread_mutex_lock(&philo->death_auth);
-	//printf("gatex0\n");
 	if (philo->table->death == 1)
 		return (-1);
-	//printf("gatex00\n");
 	pthread_mutex_unlock(&philo->death_auth);
-	//printf("gatex1\n");
-	if (philo->meal_count == philo->philo_max_meal)
-		return (-1);
-	//printf("gatex2\n");
-	if (check_last_meal_time(philo) == -1)
-	{
-		pthread_mutex_lock(&philo->table->print);
-		printf ("%lld philo %d died\n", runtime (philo), philo->philo_number);
-		pthread_mutex_unlock(&philo->table->print);
-		pthread_mutex_lock(&philo->table->death_auth);
-		philo->table->death = 1;
-		pthread_mutex_unlock(&philo->table->death_auth);
-		return (-1);
-	}
 	return (1);
 }
+
+/*
 void	ft_test_philo_data(t_philo *philo)
 {
 	printf("number of philo actual = %d\n", philo->philo_number);
@@ -131,7 +118,8 @@ void	ft_test_philo_data(t_philo *philo)
 	printf("sleep time = %d\n", philo->philo_sleep);
 	printf("max meal = %d\n", philo->philo_max_meal);
 	return ;
-}
+}*/
+
 void	*ft_start_thread_philo(void *ptr)
 {
 	t_philo	*philo;
@@ -154,8 +142,8 @@ void	*ft_start_thread_philo(void *ptr)
 	}
 	return (NULL);
 }
-
-void	*ft_start_thread_chap_one(void *ptr)
+//moniteur de mort de faim/starve_monitor
+void	*ft_start_starve_monitor_thread(void *ptr)
 {
 	t_table	*table;
 	int x;
@@ -166,6 +154,8 @@ void	*ft_start_thread_chap_one(void *ptr)
 	{
 		while (x <= table->philo_count)//nearly forever or just until end_condition == 1
 		{	//!pb, need to mutex lock for access to condition
+			if (stop_condition(&table->philo_list[x]) == -1)//if other monitor find end_condition
+				return ;
 			if (check_last_meal_time(&table->philo_list[x]) == -1)
 			{
 				pthread_mutex_lock(&table->print);
@@ -183,8 +173,8 @@ void	*ft_start_thread_chap_one(void *ptr)
 	}
 }
 
-//moniteur de nombre de repas pour tout les philos
-void	*ft_start_thread_chap_two(void *ptr)
+//moniteur de nombre de repas pour tout les philo, meal_monitor
+void	*ft_start_meal_monitor_thread(void *ptr)
 {
 	t_table	*table;
 	int x;
@@ -263,6 +253,9 @@ int	main(int argc, char **argv)
 	pthread_mutex_unlock(&table.print);
 	if (create_start_philo(&table) == -1)
 		return (0);
+	//thread_create monitor thread
+	//only create meal_monitor if argc == 6!!
+	//pthread_join monitor thread?
 	printf("gate 7\n");
 	i = 0;
 	while (i < table.philo_count)
@@ -271,6 +264,7 @@ int	main(int argc, char **argv)
 		printf("gate %d\n", i);
 		i++;
 	}
+	//destroy every mutex
 	return (0);
 }
 /*TO_DO
