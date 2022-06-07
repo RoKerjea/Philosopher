@@ -13,7 +13,7 @@
 #include "../include/philosopher.h"
 
 
-
+//Just needed for test, TO_MOVE and DEL
 void	testparam(t_table *table)
 {
 	printf("number of philo = %d\n", table->philo_count);
@@ -25,7 +25,19 @@ void	testparam(t_table *table)
 
 	return ;
 }
+/*
+void	ft_test_philo_data(t_philo *philo)
+{
+	printf("number of philo actual = %d\n", philo->philo_number);
+	printf("lifetime = %d\n", philo->philo_life);
+	printf("mealspeed = %d\n", philo->philo_meal);
+	printf("sleep time = %d\n", philo->philo_sleep);
+	printf("max meal = %d\n", philo->philo_max_meal);
+	return ;
+}*/
 
+//make function for lock and print messages
+//check end_condition before starting every step
 void	philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork);
@@ -36,7 +48,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->table->print);
 	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->philo_number);
 	printf ("%lld philo n%d is eating\n", runtime (philo), philo->philo_number);
-	philo->meal_count--;
+	philo->meal_count++;
 	pthread_mutex_unlock(&philo->table->print);
 	philo->last_meal = timestamp_ms();
 	usleep(philo->philo_meal * 1000);
@@ -70,6 +82,8 @@ int	check_sleepdeath(t_philo *philo)//can it be completly replaced by thread mon
 	return (0);
 }
 
+//make function for lock and print messages
+//check end_condition before starting every step
 int	philo_sleep(t_philo *philo)
 {
 	if (check_sleepdeath(philo) == 1)
@@ -86,6 +100,7 @@ int	philo_sleep(t_philo *philo)
 	return (0);
 }
 
+//just need mutex lock for last meal time in case philo start eating when monitor is checking
 int	check_last_meal_time(t_philo *philo)
 {
 	long long	now;
@@ -100,26 +115,20 @@ int	check_last_meal_time(t_philo *philo)
 	return (res);
 }
 
+//probably DONE
 int	stop_condition(t_philo *philo)
 {
+	int	res;
+
+	res = 1;
 	pthread_mutex_lock(&philo->death_auth);
 	if (philo->table->death == 1)
-		return (-1);
+		res = -1;
 	pthread_mutex_unlock(&philo->death_auth);
-	return (1);
+	return (res);
 }
 
-/*
-void	ft_test_philo_data(t_philo *philo)
-{
-	printf("number of philo actual = %d\n", philo->philo_number);
-	printf("lifetime = %d\n", philo->philo_life);
-	printf("mealspeed = %d\n", philo->philo_meal);
-	printf("sleep time = %d\n", philo->philo_sleep);
-	printf("max meal = %d\n", philo->philo_max_meal);
-	return ;
-}*/
-
+//routine des philo_thread probably DONE
 void	*ft_start_thread_philo(void *ptr)
 {
 	t_philo	*philo;
@@ -258,9 +267,6 @@ int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION
 	pthread_mutex_init(&table.print, 0);
 	printf("gate 5\n");
 	//testparam(&table);
-	pthread_mutex_lock(&table.print);
-	printf("gate 6\n");
-	pthread_mutex_unlock(&table.print);
 	if (create_start_philo(&table) == -1)
 		return (0);
 	//thread_create monitor thread
@@ -271,7 +277,7 @@ int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION
 	while (i < table.philo_count)
 	{
 		pthread_join(table.philo_list[i].thread_id, NULL);
-		printf("gate %d\n", i);
+		//printf("gate %d\n", i);
 		i++;
 	}
 	//destroy every mutex
