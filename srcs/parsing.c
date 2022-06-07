@@ -58,7 +58,7 @@ long long	runtime(struct s_philo *philo)
 	return (res);
 }
 
-int	parameter_table(int argc, char **argv, t_table *table)
+int	parameter_table(int argc, char **argv, t_table *table)//TO NORM
 {
 	int	i;
 
@@ -67,7 +67,7 @@ int	parameter_table(int argc, char **argv, t_table *table)
 	{
 		if (checkarg(argv[i]) == -1)
 			return (-1);
-		printf("arg %i checked\n", i);
+//		printf("arg %i checked\n", i);
 		i++;
 	}
 	table->philo_count = ft_atol(argv[1]);

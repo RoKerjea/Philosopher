@@ -142,20 +142,25 @@ void	*ft_start_thread_philo(void *ptr)
 	}
 	return (NULL);
 }
-//moniteur de mort de faim/starve_monitor
+//moniteur de mort de faim/starve_monitor probablement DONE
 void	*ft_start_starve_monitor_thread(void *ptr)
 {
 	t_table	*table;
 	int x;
 
-	x = 0;
+	x = 1;
 	table = (t_table *) ptr;
 	while (1)
 	{
 		while (x <= table->philo_count)//nearly forever or just until end_condition == 1
 		{	//!pb, need to mutex lock for access to condition
-			if (stop_condition(&table->philo_list[x]) == -1)//if other monitor find end_condition
+			pthread_mutex_lock(&table->death_auth);
+			if (table->death == 1)//if other monitor find end_condition
+			{
+				pthread_mutex_unlock(&table->death_auth);
 				return ;
+			}
+			pthread_mutex_unlock(&table->death_auth);
 			if (check_last_meal_time(&table->philo_list[x]) == -1)
 			{
 				pthread_mutex_lock(&table->print);
@@ -173,7 +178,7 @@ void	*ft_start_starve_monitor_thread(void *ptr)
 	}
 }
 
-//moniteur de nombre de repas pour tout les philo, meal_monitor
+//moniteur de nombre de repas pour tout les philo, meal_monitor TO_TWEAK
 void	*ft_start_meal_monitor_thread(void *ptr)
 {
 	t_table	*table;
@@ -183,6 +188,13 @@ void	*ft_start_meal_monitor_thread(void *ptr)
 	table = (t_table *) ptr;
 	while (x <= table->philo_count)//check end_condition in case the other thread monitor find a death
 	{
+		pthread_mutex_lock(&table->death_auth);
+		if (table->death == 1)//if other monitor find end_condition
+		{
+			pthread_mutex_unlock(&table->death_auth);
+			return ;
+		}
+		pthread_mutex_unlock(&table->death_auth);
 		//need mutex_lock for reading number of meal;
 		if (table->philo_list[x].meal_count >= table->philo_max_meal)
 			x++;
@@ -196,7 +208,7 @@ void	*ft_start_meal_monitor_thread(void *ptr)
 	return ;
 }
 
-int	create_start_philo(t_table *table)
+int	create_start_philo(t_table *table) //TO NORM
 {
 	int	i;
 
@@ -219,17 +231,15 @@ int	create_start_philo(t_table *table)
 		table->philo_list[i].print = table->print;
 		table->philo_list[i].death_auth = table->death_auth;
 		table->philo_list[i].table = table;
-		//assign param from table to philo
 		if (pthread_create(&table->philo_list[i].thread_id, NULL, ft_start_thread_philo, &table->philo_list[i]) != 0)
 			return (-1);
 		printf("philo %d created\n", i + 1);
 		i++;
 	}
-	//printf("gate 7\n");
 	return (1);
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION
 {
 	t_table	table;
 	int		i;
