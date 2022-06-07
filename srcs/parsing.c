@@ -40,24 +40,6 @@ int	checkarg(char *str)
 	return (1);
 }
 
-long long	timestamp_ms(void)
-{
-	struct timeval	time_now;
-	long long		res;
-
-	gettimeofday(&time_now, 0);
-	res = time_now.tv_sec * 1000 + time_now.tv_usec / 1000;
-	return (res);
-}
-
-long long	runtime(struct s_philo *philo)
-{
-	long long	res;
-
-	res = timestamp_ms() - philo->start_time;
-	return (res);
-}
-
 int	parameter_table(int argc, char **argv, t_table *table)//TO NORM
 {
 	int	i;
