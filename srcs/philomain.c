@@ -31,7 +31,8 @@ void	fork_choice(t_table *table, struct s_philo *philo)
 	}
 }
 
-int	create_start_philo(t_table *table) //TO NORM
+//TO NORM
+int	create_start_philo(t_table *table)
 {
 	int	i;
 
@@ -64,38 +65,63 @@ int	create_start_philo(t_table *table) //TO NORM
 	return (1);
 }
 
-int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION(possibly steps for parameter, mutex, thread, join and free & delete)
+void	ft_thread_join(t_table *table, int argc)
 {
-	t_table	table;
-	int		i;
+	int	i;
 
 	i = 0;
+	while (i < table->philo_count)
+	{
+		pthread_join(table->philo_list[i].thread_id, NULL);
+		i++;
+	}
+	pthread_join(table->monitor_id[0], NULL);
+	if (argc == 6)
+	{
+		pthread_join(table->monitor_id[1], NULL);
+	}	
+}
+
+//need to protect pthread_create!!
+int	ft_thread_create(t_table *table, int argc)
+{
+	if (create_start_philo(&table) == -1)
+		return (0);
+	pthread_create(&table->monitor_id[0], NULL, ft_starve_monitor_thread, table);
+	if (argc == 6)
+	{
+		pthread_create(&table->monitor_id[1], NULL, ft_meal_monitor_thread, table);
+	}
+	return (1);
+}
+
+void	ft_mutex_init(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->philo_count)
+	{
+		pthread_mutex_init(&table->forks[i], 0);
+		i++;
+	}
+	pthread_mutex_init(&table->death_auth, 0);
+	pthread_mutex_init(&table->print, 0);
+}
+
+//TO DIVIDE IN FUNCTION
+//(possibly steps for parameter, mutex, thread, join and free & delete)
+int	main(int argc, char **argv)
+{
+	t_table	table;
+	
 	if (argc < 5 || argc > 6)
 		return (0);
 	if (parameter_table(argc, argv, &table) == -1)
 		return (0);
-	while (i < table.philo_count)//!!one more fork for tests with one philo(replace <= with < !!)
-	{
-		pthread_mutex_init(&table.forks[i], 0);
-		i++;
-	}
-	pthread_mutex_init(&table.death_auth, 0);
-	pthread_mutex_init(&table.print, 0);
-	printf("gate 5\n");
-	//testparam(&table);
-	if (create_start_philo(&table) == -1)
-		return (0);
-	//thread_create monitor thread
-	//only create meal_monitor if argc == 6!!
-	//pthread_join monitor thread?
-	printf("gate 7\n");
-	i = 0;
-	while (i < table.philo_count)
-	{
-		pthread_join(table.philo_list[i].thread_id, NULL);
-		//printf("gate %d\n", i);
-		i++;
-	}
+	ft_mutex_init(&table);
+	ft_thread_create(&table, argc);
+	ft_thread_join(&table, argc);
 	//destroy and free everything mutex !!
 	return (0);
 }

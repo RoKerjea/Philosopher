@@ -31,3 +31,15 @@ int	death_check(t_table *table)
 	pthread_mutex_unlock(&table->death_auth);
 	return (res);
 }
+
+int	last_meal_check(t_philo *philo)
+{
+	int	res;
+
+	res = 0;
+	pthread_mutex_lock(&philo->pmutex);
+	if (philo->meal_count >= philo->philo_max_meal)
+		res = 1;
+	pthread_mutex_unlock(&philo->pmutex);
+	return (res);
+}

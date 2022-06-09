@@ -12,7 +12,6 @@
 
 #include "../include/philosopher.h"
 
-
 void	philo_update(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->pmutex);
@@ -25,93 +24,63 @@ void	philo_update(t_philo *philo)
 //check end_condition before starting every step
 void	philo_eat(t_philo *philo)
 {
+	if (death_check(philo->table) == -1)
+		return ;
 	pthread_mutex_lock(philo->fork_one);
-	pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->num);
-	pthread_mutex_unlock(&philo->table->print);
+	if (death_check(philo->table) == -1)
+	{
+		pthread_mutex_unlock(philo->fork_one);
+		return ;
+	}
+	ft_mutex_print_fork(philo);
+	if (death_check(philo->table) == -1)
+	{
+		pthread_mutex_unlock(philo->fork_one);
+		return ;
+	}
 	pthread_mutex_lock(philo->fork_two);
-	pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->num);
-	printf ("%lld philo n%d is eating\n", runtime (philo), philo->num);
-	pthread_mutex_unlock(&philo->table->print);
-/*	philo->meal_count++;
-	philo->last_meal = timestamp_ms();*/
+	if (death_check(philo->table) == -1)
+	{
+		pthread_mutex_unlock(philo->fork_one);
+		pthread_mutex_unlock(philo->fork_two);
+		return ;
+	}
+	ft_mutex_print_eating(philo);
 	philo_update(philo);
 	usleep(philo->philo_meal * 1000);
 	pthread_mutex_unlock(philo->fork_one);
 	pthread_mutex_unlock(philo->fork_two);
-	/*pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->num);
-	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->num);
-	pthread_mutex_unlock(&philo->table->print);*/
 }
 
-/*????
-int	check_sleepdeath(t_philo *philo)//can it be completly replaced by thread monitor?
+void	philo_sleep(t_philo *philo)
 {
-	if (philo->philo_sleep > philo->last_meal + philo->philo_life)
-	{
-		pthread_mutex_lock(&philo->table->print);
-		printf ("%lld philo n%d is sleeping\n", runtime (philo), philo->num);
-		pthread_mutex_unlock(&philo->table->print);
-		usleep(philo->philo_life - (timestamp_ms() - philo->last_meal));
-		pthread_mutex_lock(&philo->table->print);
-		printf ("%lld philo %d died\n", runtime (philo), philo->num);
-		pthread_mutex_unlock(&philo->table->print);
-		pthread_mutex_lock(&philo->table->death_auth);
-		if (philo->table->death == 0)
-		{
-			philo->table->death = 1;
-		}
-		pthread_mutex_unlock(&philo->table->death_auth);
-		return (1);
-	}
-	return (0);
-}*/
-
-//make function for lock and print messages
-//check end_condition before starting every step
-int	philo_sleep(t_philo *philo)
-{
-	if (check_sleepdeath(philo) == 1)
-		return (0);*/
+	if (death_check(philo->table) == -1)
+		return ;
 	ft_mutex_print_sleep(philo);
 	usleep(philo->philo_sleep * 1000);
-	//check endcondition before next task, if death_monitor did his job,
-	//no need for philo_thread to check himself if death during sleep
+	if (death_check(philo->table) == -1)
+		return ;
 	ft_mutex_print_think(philo);
-	return (0);
+	return ;
 }
 
-//probably DONE
-int	stop_condition(t_philo *philo)
-{
-	int	res;
-
-	res = 1;
-	pthread_mutex_lock(&philo->death_auth);
-	if (philo->table->death == 1)
-		res = -1;
-	pthread_mutex_unlock(&philo->death_auth);
-	return (res);
-}
-
+//si philo count even->need delay every second thread
+//if philo_count odd->need delay every second of three and every third
+//sleep time TO TWEAK !
 void	start_delay(t_philo *philo)
 {
-	//si philo count even->need delay every second thread
-	//if philo_count odd->need delay every second of three and every third even more
 	if (philo->philo_count % 2 == 0)
 	{
 		if (philo->num % 2 == 0)
-			usleep(50);//to tweak
+			usleep(50);
 	}
 	else
 	{
 		if (philo->num % 2 == 0)
-			usleep(50);//to tweak
-		else if (philo->num %3 == 0)
+			usleep(50);
+		else if (philo->num % 3 == 0)
 		{
-			usleep(100);//to_tweak
+			usleep(100);
 		}		
 	}
 }
@@ -122,13 +91,12 @@ void	*ft_start_thread_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *) ptr;
-	//ft_test_philo_data(philo);
 	start_delay(philo);
-	while (stop_condition(philo) == 1)
+	while (death_check(philo->table) == 1)
 	{
-		if (stop_condition(philo) == 1)
+		if (death_check(philo->table) == 1)
 			philo_eat(philo);
-		if (stop_condition(philo) == 1)
+		if (death_check(philo->table) == 1)
 			philo_sleep(philo);
 	}
 	return (NULL);

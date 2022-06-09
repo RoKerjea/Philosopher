@@ -30,7 +30,7 @@ SRCS		=	${addprefix srcs/, \
 				time.c \
 				thread_monitor.c \
 				mutex_print.c \
-				test .c \
+				test.c \
 				stop.c \
 				parsing.c}
 

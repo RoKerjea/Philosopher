@@ -53,6 +53,7 @@ typedef struct s_table
 	pthread_mutex_t	forks[300];
 	pthread_mutex_t	print;
 	struct s_philo	*philo_list;
+	pthread_t		monitor_id[2];
 }				t_table;
 
 /*LIB*/
@@ -64,7 +65,6 @@ char			**ft_freetab(char **tab);
 unsigned long	ft_strlen(const char *s);
 
 //PARSING.C//
-
 int				parameter_table(int argc, char **argv, t_table *table);
 
 //TIME.C
@@ -79,6 +79,7 @@ void			*ft_meal_monitor_thread(void *ptr);
 //STOP.C
 void			death_cert(t_table *table);
 int				death_check(t_table *table);
+int				last_meal_check(t_philo *philo);
 
 //PHILO_LOOP.C
 int				stop_condition(t_philo *philo);
@@ -90,6 +91,7 @@ void			ft_mutex_print_sleep(t_philo *philo);
 void			ft_mutex_print_fork(t_philo *philo);
 void			ft_mutex_print_think(t_philo *philo);
 void			ft_mutex_print_eating(t_philo *philo);
+void			ft_mutex_print_death(t_philo *philo);
 
 //TO DELETE
 void			testparam(t_table *table);
