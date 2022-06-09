@@ -27,7 +27,7 @@ void	testparam(t_table *table)
 
 void	ft_test_philo_data(t_philo *philo)
 {
-	printf("number of philo actual = %d\n", philo->philo_number);
+	printf("number of philo actual = %d\n", philo->num);
 	printf("lifetime = %d\n", philo->philo_life);
 	printf("mealspeed = %d\n", philo->philo_meal);
 	printf("sleep time = %d\n", philo->philo_sleep);

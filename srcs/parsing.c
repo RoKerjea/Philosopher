@@ -40,7 +40,7 @@ int	checkarg(char *str)
 	return (1);
 }
 
-int	parameter_table(int argc, char **argv, t_table *table)//TO NORM
+int	parameter_table(int argc, char **argv, t_table *table)
 {
 	int	i;
 
@@ -49,7 +49,6 @@ int	parameter_table(int argc, char **argv, t_table *table)//TO NORM
 	{
 		if (checkarg(argv[i]) == -1)
 			return (-1);
-//		printf("arg %i checked\n", i);
 		i++;
 	}
 	table->philo_count = ft_atol(argv[1]);

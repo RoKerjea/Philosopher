@@ -28,7 +28,7 @@ typedef struct s_philo
 	int				philo_meal;
 	int				philo_sleep;
 	int				philo_max_meal;
-	int				philo_number;
+	int				num;
 	int				meal_count;
 	long long		last_meal;
 	pthread_t		thread_id;

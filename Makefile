@@ -31,6 +31,7 @@ SRCS		=	${addprefix srcs/, \
 				thread_monitor.c \
 				mutex_print.c \
 				test .c \
+				stop.c \
 				parsing.c}
 
 LIB			=	${addprefix not_libft/, \

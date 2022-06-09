@@ -36,9 +36,7 @@ void	*ft_starve_monitor_thread(void *ptr)
 				pthread_mutex_lock(&table->print);
 				printf ("%lld philo %d died\n", runtime (&table->philo_list[x]), x + 1);
 				pthread_mutex_unlock(&table->print);
-				pthread_mutex_lock(&table->death_auth);
-				table->death = 1;
-				pthread_mutex_unlock(&table->death_auth);
+				death_cert(table);
 				return ;//?
 			}
 			x++;
@@ -58,24 +56,16 @@ void	*ft_meal_monitor_thread(void *ptr)
 	table = (t_table *) ptr;
 	while (x <= table->philo_count)//check end_condition in case the other thread monitor find a death
 	{
-		pthread_mutex_lock(&table->death_auth);
-		if (table->death == 1)//if other monitor find end_condition
-		{
-			pthread_mutex_unlock(&table->death_auth);
+		if (death_check(table) == -1)
 			return ;
-		}
-		pthread_mutex_unlock(&table->death_auth);
 		//need mutex_lock for reading number of meal;
 		pthread_mutex_lock(&table->philo_list[x].pmutex);
 		if (table->philo_list[x].meal_count >= table->philo_max_meal)
-			x++;
-		pthread_mutex_unlock(&table->philo_list[x].pmutex);
+			x++;//pas bien ca
+		pthread_mutex_unlock(&table->philo_list[x - 1].pmutex);
 		/*else
 			usleep(100);//to tweak*/
 	}
-	pthread_mutex_lock(&table->death_auth);
-	if (table->death != 1)
-		table->death = 1;
-	pthread_mutex_unlock(&table->death_auth);
+	death_cert(table);
 	return ;
 }

@@ -18,7 +18,7 @@ void	fork_choice(t_table *table, struct s_philo *philo)
 {
 	int	num;
 
-	num = philo->philo_number;
+	num = philo->num;
 	if (num % 2 == 1)
 	{
 		philo->fork_one = &table->forks[num - 1];
@@ -43,7 +43,7 @@ int	create_start_philo(t_table *table) //TO NORM
 	{
 		/*table->philo_list[i].fork_one = &table->forks[i];
 		table->philo_list[i].fork_two = &table->forks[(i + 1) % table->philo_count];*/
-		table->philo_list[i].philo_number = i + 1;
+		table->philo_list[i].num = i + 1;
 		fork_choice(table, &table->philo_list[i]);
 		table->philo_list[i].meal_count = 0;
 		table->philo_list[i].start_time = table->start_time;
@@ -96,19 +96,6 @@ int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION(possibly steps for param
 		//printf("gate %d\n", i);
 		i++;
 	}
-	//destroy every mutex !!
+	//destroy and free everything mutex !!
 	return (0);
 }
-/*TO_DO
-elements of routine
-death check and write with mutex
-
-thread moniteur de status pour savoir si il ya raison de stop :
-un pour verifier philo par philo, si il y a un mort de faim(datarace possible si check and edit of last meal time simultaneous)
-et un pour verifier si TOUT les philos ont mange leurs dernier repas et ENSUITE editer stop_condition = 1
-Donc
-les philos n'ont plus a se preocupper eux meme de savoir si ils ont atteint leurs max de repas
-NI
-de savoir si ils viennent de mourir
-uniquement de verifier si stop_condition == 1 en arreter tout ou continuer normalement
-*/

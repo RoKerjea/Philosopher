@@ -27,12 +27,12 @@ void	philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->fork_one);
 	pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->philo_number);
+	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->num);
 	pthread_mutex_unlock(&philo->table->print);
 	pthread_mutex_lock(philo->fork_two);
 	pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->philo_number);
-	printf ("%lld philo n%d is eating\n", runtime (philo), philo->philo_number);
+	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->num);
+	printf ("%lld philo n%d is eating\n", runtime (philo), philo->num);
 	pthread_mutex_unlock(&philo->table->print);
 /*	philo->meal_count++;
 	philo->last_meal = timestamp_ms();*/
@@ -41,8 +41,8 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->fork_one);
 	pthread_mutex_unlock(philo->fork_two);
 	/*pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->philo_number);
-	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->philo_number);
+	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->num);
+	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->num);
 	pthread_mutex_unlock(&philo->table->print);*/
 }
 
@@ -52,11 +52,11 @@ int	check_sleepdeath(t_philo *philo)//can it be completly replaced by thread mon
 	if (philo->philo_sleep > philo->last_meal + philo->philo_life)
 	{
 		pthread_mutex_lock(&philo->table->print);
-		printf ("%lld philo n%d is sleeping\n", runtime (philo), philo->philo_number);
+		printf ("%lld philo n%d is sleeping\n", runtime (philo), philo->num);
 		pthread_mutex_unlock(&philo->table->print);
 		usleep(philo->philo_life - (timestamp_ms() - philo->last_meal));
 		pthread_mutex_lock(&philo->table->print);
-		printf ("%lld philo %d died\n", runtime (philo), philo->philo_number);
+		printf ("%lld philo %d died\n", runtime (philo), philo->num);
 		pthread_mutex_unlock(&philo->table->print);
 		pthread_mutex_lock(&philo->table->death_auth);
 		if (philo->table->death == 0)
@@ -73,17 +73,13 @@ int	check_sleepdeath(t_philo *philo)//can it be completly replaced by thread mon
 //check end_condition before starting every step
 int	philo_sleep(t_philo *philo)
 {
-	/*if (check_sleepdeath(philo) == 1)
+	if (check_sleepdeath(philo) == 1)
 		return (0);*/
-	pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d is sleeping\n", runtime (philo), philo->philo_number);
-	pthread_mutex_unlock(&philo->table->print);
+	ft_mutex_print_sleep(philo);
 	usleep(philo->philo_sleep * 1000);
 	//check endcondition before next task, if death_monitor did his job,
 	//no need for philo_thread to check himself if death during sleep
-	pthread_mutex_lock(&philo->table->print);
-	printf ("%lld philo n%d is thinking\n", runtime (philo), philo->philo_number);
-	pthread_mutex_unlock(&philo->table->print);
+	ft_mutex_print_think(philo);
 	return (0);
 }
 
@@ -104,7 +100,20 @@ void	start_delay(t_philo *philo)
 {
 	//si philo count even->need delay every second thread
 	//if philo_count odd->need delay every second of three and every third even more
-	if ()
+	if (philo->philo_count % 2 == 0)
+	{
+		if (philo->num % 2 == 0)
+			usleep(50);//to tweak
+	}
+	else
+	{
+		if (philo->num % 2 == 0)
+			usleep(50);//to tweak
+		else if (philo->num %3 == 0)
+		{
+			usleep(100);//to_tweak
+		}		
+	}
 }
 
 //routine des philo_thread probably DONE TO_CLEAN
@@ -114,13 +123,7 @@ void	*ft_start_thread_philo(void *ptr)
 
 	philo = (t_philo *) ptr;
 	//ft_test_philo_data(philo);
-	/*if (philo->philo_number % 2 == 0)
-		usleep(philo->philo_meal / 10);*/
-	//printf("gatex\n");
-	pthread_mutex_lock(&philo->print);
-	//printf ("this is philo n%d\n", philo->philo_number);
-	pthread_mutex_unlock(&philo->print);
-	//printf("gatexy\n");
+	start_delay(philo);
 	while (stop_condition(philo) == 1)
 	{
 		if (stop_condition(philo) == 1)

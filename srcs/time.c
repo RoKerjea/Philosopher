@@ -12,20 +12,17 @@
 
 #include "../include/philosopher.h"
 
-//just need mutex lock for last meal time in case philo start eating when monitor is checking
 int	check_last_meal_time(t_philo *philo)
 {
 	long long	now;
-	int res;
+	int			res;
 
-	now = runtime(philo);
 	res = 1;
-	//need mutex_lock() for writing/reading lastmeal time
+	now = runtime(philo);
 	pthread_mutex_lock(&philo->pmutex);
 	if (now - philo->last_meal >= philo->philo_life)
-		res = -1;	
+		res = -1;
 	pthread_mutex_unlock(&philo->pmutex);
-	//need mutex_unlock() for writing/reading lastmeal time
 	return (res);
 }
 
