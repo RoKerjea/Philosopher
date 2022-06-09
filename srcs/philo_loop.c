@@ -12,24 +12,34 @@
 
 #include "../include/philosopher.h"
 
+
+void	philo_update(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->pmutex);
+	philo->meal_count++;
+	philo->last_meal = timestamp_ms();
+	pthread_mutex_unlock(&philo->pmutex);
+}
+
 //make function for lock and print messages
 //check end_condition before starting every step
 void	philo_eat(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left_fork);
+	pthread_mutex_lock(philo->fork_one);
 	pthread_mutex_lock(&philo->table->print);
 	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->philo_number);
 	pthread_mutex_unlock(&philo->table->print);
-	pthread_mutex_lock(philo->right_fork);
+	pthread_mutex_lock(philo->fork_two);
 	pthread_mutex_lock(&philo->table->print);
 	printf ("%lld philo n%d has taken a fork\n", runtime (philo), philo->philo_number);
 	printf ("%lld philo n%d is eating\n", runtime (philo), philo->philo_number);
-	philo->meal_count++;
 	pthread_mutex_unlock(&philo->table->print);
-	philo->last_meal = timestamp_ms();
+/*	philo->meal_count++;
+	philo->last_meal = timestamp_ms();*/
+	philo_update(philo);
 	usleep(philo->philo_meal * 1000);
-	pthread_mutex_unlock(philo->left_fork);
-	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(philo->fork_one);
+	pthread_mutex_unlock(philo->fork_two);
 	/*pthread_mutex_lock(&philo->table->print);
 	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->philo_number);
 	printf ("%lld philo n%d has released a fork\n", runtime (philo), philo->philo_number);
@@ -90,6 +100,13 @@ int	stop_condition(t_philo *philo)
 	return (res);
 }
 
+void	start_delay(t_philo *philo)
+{
+	//si philo count even->need delay every second thread
+	//if philo_count odd->need delay every second of three and every third even more
+	if ()
+}
+
 //routine des philo_thread probably DONE TO_CLEAN
 void	*ft_start_thread_philo(void *ptr)
 {
@@ -97,7 +114,7 @@ void	*ft_start_thread_philo(void *ptr)
 
 	philo = (t_philo *) ptr;
 	//ft_test_philo_data(philo);
-	/*if (philo->philo_number % 2 == 1)
+	/*if (philo->philo_number % 2 == 0)
 		usleep(philo->philo_meal / 10);*/
 	//printf("gatex\n");
 	pthread_mutex_lock(&philo->print);

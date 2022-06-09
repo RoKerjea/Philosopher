@@ -14,6 +14,23 @@
 
 //make a function for philo parameter before phread_create
 
+void	fork_choice(t_table *table, struct s_philo *philo)
+{
+	int	num;
+
+	num = philo->philo_number;
+	if (num % 2 == 1)
+	{
+		philo->fork_one = &table->forks[num - 1];
+		philo->fork_two = &table->forks[num % table->philo_count];
+	}
+	else
+	{
+		philo->fork_one = &table->forks[num % table->philo_count];
+		philo->fork_two = &table->forks[num - 1];
+	}
+}
+
 int	create_start_philo(t_table *table) //TO NORM
 {
 	int	i;
@@ -24,9 +41,10 @@ int	create_start_philo(t_table *table) //TO NORM
 		return (-1);
 	while (i < table->philo_count)
 	{
-		table->philo_list[i].left_fork = &table->forks[i];
-		table->philo_list[i].right_fork = &table->forks[(i + 1) % table->philo_count];
+		/*table->philo_list[i].fork_one = &table->forks[i];
+		table->philo_list[i].fork_two = &table->forks[(i + 1) % table->philo_count];*/
 		table->philo_list[i].philo_number = i + 1;
+		fork_choice(table, &table->philo_list[i]);
 		table->philo_list[i].meal_count = 0;
 		table->philo_list[i].start_time = table->start_time;
 		table->philo_list[i].philo_count =table->philo_count;
@@ -34,9 +52,10 @@ int	create_start_philo(t_table *table) //TO NORM
 		table->philo_list[i].philo_meal = table->philo_meal;
 		table->philo_list[i].philo_sleep = table->philo_sleep;
 		table->philo_list[i].philo_max_meal = table->philo_max_meal;
-		table->philo_list[i].print = table->print;
-		table->philo_list[i].death_auth = table->death_auth;
+		table->philo_list[i].print = &table->print;
+		table->philo_list[i].death_auth = &table->death_auth;
 		table->philo_list[i].table = table;
+		pthread_mutex_init(&table->philo_list[i].pmutex, 0);
 		if (pthread_create(&table->philo_list[i].thread_id, NULL, ft_start_thread_philo, &table->philo_list[i]) != 0)
 			return (-1);
 		printf("philo %d created\n", i + 1);
@@ -55,7 +74,7 @@ int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION(possibly steps for param
 		return (0);
 	if (parameter_table(argc, argv, &table) == -1)
 		return (0);
-	while (i <= table.philo_count)//!!one more fork for tests with one philo(replace <= with < !!)
+	while (i < table.philo_count)//!!one more fork for tests with one philo(replace <= with < !!)
 	{
 		pthread_mutex_init(&table.forks[i], 0);
 		i++;
@@ -77,7 +96,7 @@ int	main(int argc, char **argv) //TO DIVIDE IN FUNCTION(possibly steps for param
 		//printf("gate %d\n", i);
 		i++;
 	}
-	//destroy every mutex
+	//destroy every mutex !!
 	return (0);
 }
 /*TO_DO

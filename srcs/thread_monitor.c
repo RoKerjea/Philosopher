@@ -18,11 +18,11 @@ void	*ft_starve_monitor_thread(void *ptr)
 	t_table	*table;
 	int x;
 
-	x = 1;
+	x = 0;
 	table = (t_table *) ptr;
 	while (1)
 	{
-		while (x <= table->philo_count)//nearly forever or just until end_condition == 1
+		while (x < table->philo_count)//nearly forever or just until end_condition == 1
 		{	//!pb, need to mutex lock for access to condition
 			pthread_mutex_lock(&table->death_auth);
 			if (table->death == 1)//if other monitor find end_condition
@@ -66,10 +66,12 @@ void	*ft_meal_monitor_thread(void *ptr)
 		}
 		pthread_mutex_unlock(&table->death_auth);
 		//need mutex_lock for reading number of meal;
+		pthread_mutex_lock(&table->philo_list[x].pmutex);
 		if (table->philo_list[x].meal_count >= table->philo_max_meal)
 			x++;
-		else
-			usleep(100);//to tweak
+		pthread_mutex_unlock(&table->philo_list[x].pmutex);
+		/*else
+			usleep(100);//to tweak*/
 	}
 	pthread_mutex_lock(&table->death_auth);
 	if (table->death != 1)

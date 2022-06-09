@@ -1,18 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Version_philo.h                                    :+:      :+:    :+:   */
+/*   stop.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/07 19:58:28 by rokerjea          #+#    #+#             */
-/*   Updated: 2022/06/07 19:58:31 by rokerjea         ###   ########.fr       */
+/*   Created: 2022/06/09 16:05:00 by rokerjea          #+#    #+#             */
+/*   Updated: 2022/06/09 16:05:04 by rokerjea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VERSION_PHILO_H
-#define VERSION_PHILO_H
-#define MAJOR_VERSION "0"
-#define MINOR_VERSION "26"
-#define BUILD_DATE "09 06 2022 16h51 CEST"
-#endif
+#include "../include/philosopher.h"
+
+void	death_cert(t_table *table)
+{
+	pthread_mutex_lock(&table->death_auth);
+	if (table->death != 1)
+		table->death = 1;
+	pthread_mutex_unlock(&table->death_auth);
+}
+
+int	death_check(t_table *table)
+{
+	int	res;
+
+	res = 1;
+	pthread_mutex_lock(&table->death_auth);
+	if (table->death == 1)
+		res = -1;
+	pthread_mutex_unlock(&table->death_auth);
+	return (res);
+}

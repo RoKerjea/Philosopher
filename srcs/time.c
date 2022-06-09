@@ -21,8 +21,10 @@ int	check_last_meal_time(t_philo *philo)
 	now = runtime(philo);
 	res = 1;
 	//need mutex_lock() for writing/reading lastmeal time
+	pthread_mutex_lock(&philo->pmutex);
 	if (now - philo->last_meal >= philo->philo_life)
-		res = -1;
+		res = -1;	
+	pthread_mutex_unlock(&philo->pmutex);
 	//need mutex_unlock() for writing/reading lastmeal time
 	return (res);
 }

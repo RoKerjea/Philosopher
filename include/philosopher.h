@@ -32,10 +32,11 @@ typedef struct s_philo
 	int				meal_count;
 	long long		last_meal;
 	pthread_t		thread_id;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	print;
-	pthread_mutex_t	death_auth;
+	pthread_mutex_t	pmutex;
+	pthread_mutex_t	*fork_one;
+	pthread_mutex_t	*fork_two;
+	pthread_mutex_t	*print;
+	pthread_mutex_t	*death_auth;
 	struct s_table	*table;
 }				t_philo;
 
@@ -74,6 +75,10 @@ int				check_last_meal_time(t_philo *philo);
 //THREAD_MONITOR.C
 void			*ft_starve_monitor_thread(void *ptr);
 void			*ft_meal_monitor_thread(void *ptr);
+
+//STOP.C
+void			death_cert(t_table *table);
+int				death_check(t_table *table);
 
 //PHILO_LOOP.C
 int				stop_condition(t_philo *philo);
