@@ -31,6 +31,12 @@ void	fork_choice(t_table *table, struct s_philo *philo)
 	}
 }
 
+//copy data from table to philo
+void	ft_philo_attributes(t_table *table)
+{
+
+}
+
 //TO NORM
 int	create_start_philo(t_table *table)
 {
@@ -38,17 +44,15 @@ int	create_start_philo(t_table *table)
 
 	i = 0;
 	table->philo_list = malloc(sizeof(t_philo) * (table->philo_count + 1));
-	if (table->philo_life == 0)
+	if (table->philo_list == 0)
 		return (-1);
 	while (i < table->philo_count)
 	{
-		/*table->philo_list[i].fork_one = &table->forks[i];
-		table->philo_list[i].fork_two = &table->forks[(i + 1) % table->philo_count];*/
 		table->philo_list[i].num = i + 1;
 		fork_choice(table, &table->philo_list[i]);
 		table->philo_list[i].meal_count = 0;
 		table->philo_list[i].start_time = table->start_time;
-		table->philo_list[i].philo_count =table->philo_count;
+		table->philo_list[i].philo_count = table->philo_count;
 		table->philo_list[i].philo_life = table->philo_life;
 		table->philo_list[i].philo_meal = table->philo_meal;
 		table->philo_list[i].philo_sleep = table->philo_sleep;
@@ -59,10 +63,24 @@ int	create_start_philo(t_table *table)
 		pthread_mutex_init(&table->philo_list[i].pmutex, 0);
 		if (pthread_create(&table->philo_list[i].thread_id, NULL, ft_start_thread_philo, &table->philo_list[i]) != 0)
 			return (-1);
-		printf("philo %d created\n", i + 1);
 		i++;
 	}
 	return (1);
+}
+
+void	ft_mutex_destroy(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->philo_count)
+	{
+		pthread_mutex_destroy(&table->philo_list[i].pmutex);
+		pthread_mutex_destroy(&table->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&table->print);
+	pthread_mutex_destroy(&table->death_auth);
 }
 
 void	ft_thread_join(t_table *table, int argc)
@@ -114,7 +132,7 @@ void	ft_mutex_init(t_table *table)
 int	main(int argc, char **argv)
 {
 	t_table	table;
-	
+
 	if (argc < 5 || argc > 6)
 		return (0);
 	if (parameter_table(argc, argv, &table) == -1)
@@ -122,6 +140,8 @@ int	main(int argc, char **argv)
 	ft_mutex_init(&table);
 	ft_thread_create(&table, argc);
 	ft_thread_join(&table, argc);
-	//destroy and free everything mutex !!
+	ft_mutex_destroy(&table);
+	free (table.philo_list);
 	return (0);
 }
+//free everything !!

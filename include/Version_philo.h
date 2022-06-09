@@ -13,6 +13,6 @@
 #ifndef VERSION_PHILO_H
 #define VERSION_PHILO_H
 #define MAJOR_VERSION "0"
-#define MINOR_VERSION "29"
-#define BUILD_DATE "09 06 2022 22h54 CEST"
+#define MINOR_VERSION "30"
+#define BUILD_DATE "09 06 2022 23h10 CEST"
 #endif
