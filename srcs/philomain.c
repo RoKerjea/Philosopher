@@ -26,7 +26,7 @@ void	ft_mutex_destroy(t_table *table)
 	pthread_mutex_destroy(&table->print);
 	pthread_mutex_destroy(&table->death_auth);
 }
-
+//To protect
 void	ft_thread_join(t_table *table, int argc)
 {
 	int	i;
@@ -56,7 +56,7 @@ int	ft_thread_create(t_table *table, int argc)
 	}
 	return (1);
 }
-
+//To protect
 int	ft_mutex_init(t_table *table)
 {
 	int	i;

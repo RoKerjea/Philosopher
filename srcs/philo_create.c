@@ -17,16 +17,8 @@ void	fork_choice(t_table *table, struct s_philo *philo)
 	int	num;
 
 	num = philo->num;
-	//if (num % 2 == 1)
-	//{
-		philo->fork_two = &table->forks[num - 1];
-		philo->fork_one = &table->forks[num % table->philo_count];
-	/*}
-	else
-	{
-		philo->fork_two = &table->forks[num % table->philo_count];
-		philo->fork_one = &table->forks[num - 1];
-	}*/
+	philo->fork_two = &table->forks[num - 1];
+	philo->fork_one = &table->forks[num % table->philo_count];
 }
 
 void	ft_philo_attributes(t_table *table, int i)
@@ -44,7 +36,7 @@ void	ft_philo_attributes(t_table *table, int i)
 	table->philo_list[i].table = table;
 	table->philo_list[i].last_meal = table->start_time;
 }
-
+//To protect create AND mutex init
 int	create_start_philo(t_table *table)
 {
 	int	i;
