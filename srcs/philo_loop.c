@@ -27,8 +27,6 @@ int	brainstorm(struct s_philo *philo, int forks)
 	return (res);
 }
 
-//make function for lock and print messages
-//check end_condition before starting every step
 void	philo_eat(t_philo *philo)
 {
 	if (death_check(philo->table) == -1)
@@ -63,9 +61,6 @@ void	philo_sleep(t_philo *philo)
 	return ;
 }
 
-//si philo count even->need delay every second thread
-//if philo_count odd->need delay every second of three and every third
-//sleep time TO TWEAK !
 void	start_delay(t_philo *philo)
 {
 	if (philo->philo_count % 2 == 0)
@@ -84,7 +79,6 @@ void	start_delay(t_philo *philo)
 	}
 }
 
-//routine des philo_thread probably DONE TO_CLEAN
 void	*ft_start_thread_philo(void *ptr)
 {
 	t_philo	*philo;

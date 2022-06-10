@@ -57,18 +57,22 @@ int	ft_thread_create(t_table *table, int argc)
 	return (1);
 }
 
-void	ft_mutex_init(t_table *table)
+int	ft_mutex_init(t_table *table)
 {
 	int	i;
 
 	i = 0;
 	while (i < table->philo_count)
 	{
-		pthread_mutex_init(&table->forks[i], 0);
+		if (pthread_mutex_init(&table->forks[i], 0) != 0)
+			return (-1);
 		i++;
 	}
-	pthread_mutex_init(&table->death_auth, 0);
-	pthread_mutex_init(&table->print, 0);
+	if (pthread_mutex_init(&table->death_auth, 0) != 0)
+		return (-1);
+	if (pthread_mutex_init(&table->print, 0) != 0)
+		return (-1);
+	return (1);
 }
 
 int	main(int argc, char **argv)
@@ -79,7 +83,8 @@ int	main(int argc, char **argv)
 		return (0);
 	if (parameter_table(argc, argv, &table) == -1)
 		return (0);
-	ft_mutex_init(&table);
+	if (ft_mutex_init(&table) == -1)
+		return (0);
 	ft_thread_create(&table, argc);
 	ft_thread_join(&table, argc);
 	ft_mutex_destroy(&table);

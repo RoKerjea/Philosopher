@@ -90,7 +90,6 @@ void			*ft_start_thread_philo(void *ptr);
 int				create_start_philo(t_table *table);
 
 //MUTEX_PRINT.C
-
 void			ft_mutex_print_sleep(t_philo *philo);
 void			ft_mutex_print_fork(t_philo *philo);
 void			ft_mutex_print_think(t_philo *philo);
