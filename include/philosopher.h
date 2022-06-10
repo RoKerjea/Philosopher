@@ -73,8 +73,8 @@ long long		runtime(struct s_philo *philo);
 int				check_last_meal_time(t_philo *philo);
 
 //THREAD_MONITOR.C
-void			*ft_starve_monitor_thread(void *ptr);
-void			*ft_meal_monitor_thread(void *ptr);
+void			*ft_starve_monitor(void *ptr);
+void			*ft_meal_monitor(void *ptr);
 
 //STOP.C
 void			death_cert(t_table *table);

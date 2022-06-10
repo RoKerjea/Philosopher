@@ -72,7 +72,7 @@ void	start_delay(t_philo *philo)
 	if (philo->philo_count % 2 == 0)
 	{
 		if (philo->num % 2 == 0)
-			usleep(50);
+			usleep(1000);
 	}
 	else
 	{
@@ -81,7 +81,7 @@ void	start_delay(t_philo *philo)
 		else if (philo->num % 3 == 0)
 		{
 			usleep(100);
-		}		
+		}
 	}
 }
 

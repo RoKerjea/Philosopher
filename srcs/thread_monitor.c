@@ -13,7 +13,7 @@
 #include "../include/philosopher.h"
 
 //moniteur de mort de faim/starve_monitor probablement DONE
-void	*ft_starve_monitor_thread(void *ptr)
+void	*ft_starve_monitor(void *ptr)
 {
 	t_table	*table;
 	int		x;
@@ -42,7 +42,7 @@ void	*ft_starve_monitor_thread(void *ptr)
 
 //moniteur de nombre de repas pour tout les philo, meal_monitor TO_TWEAK
 //sleep time to tweak!!
-void	*ft_meal_monitor_thread(void *ptr)
+void	*ft_meal_monitor(void *ptr)
 {
 	t_table	*table;
 	int		x;
