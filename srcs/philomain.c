@@ -39,20 +39,20 @@ void	ft_thread_join(t_table *table, int argc)
 	}
 	pthread_join(table->monitor_id[0], NULL);
 	if (argc == 6)
-	{
 		pthread_join(table->monitor_id[1], NULL);
-	}
 }
 
 //need to protect pthread_create!!
 int	ft_thread_create(t_table *table, int argc)
 {
 	if (create_start_philo(table) == -1)
-		return (0);
-	pthread_create(&table->monitor_id[0], NULL, ft_starve_monitor, table);
+		return (-1);
+	if (pthread_create(&table->monitor_id[0], NULL, ft_starve_monitor, table) != 0)
+		return (-1);
 	if (argc == 6)
 	{
-		pthread_create(&table->monitor_id[1], NULL, ft_meal_monitor, table);
+		if (pthread_create(&table->monitor_id[1], NULL, ft_meal_monitor, table) != 0)
+			return (-1);
 	}
 	return (1);
 }
@@ -73,6 +73,12 @@ int	ft_mutex_init(t_table *table)
 	if (pthread_mutex_init(&table->print, 0) != 0)
 		return (-1);
 	return (1);
+}
+
+void	clean(t_table *table)
+{
+	if (table->philo_list != 0)
+		free (table->philo_list);
 }
 
 int	main(int argc, char **argv)
