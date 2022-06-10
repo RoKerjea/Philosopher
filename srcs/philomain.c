@@ -26,17 +26,15 @@ void	ft_mutex_destroy(t_table *table)
 	pthread_mutex_destroy(&table->print);
 	pthread_mutex_destroy(&table->death_auth);
 }
-//To protect
+
+//To protect?
 void	ft_thread_join(t_table *table, int argc)
 {
 	int	i;
 
 	i = 0;
-	while (i < table->philo_count)
-	{
+	while (i++ < table->philo_count)
 		pthread_join(table->philo_list[i].thread_id, NULL);
-		i++;
-	}
 	pthread_join(table->monitor_id[0], NULL);
 	if (argc == 6)
 		pthread_join(table->monitor_id[1], NULL);
@@ -56,6 +54,7 @@ int	ft_thread_create(t_table *table, int argc)
 	}
 	return (1);
 }
+
 //To protect
 int	ft_mutex_init(t_table *table)
 {
@@ -75,6 +74,7 @@ int	ft_mutex_init(t_table *table)
 	return (1);
 }
 
+//unnecessary?
 void	clean(t_table *table)
 {
 	if (table->philo_list != 0)
@@ -91,7 +91,10 @@ int	main(int argc, char **argv)
 		return (0);
 	if (ft_mutex_init(&table) == -1)
 		return (0);
-	ft_thread_create(&table, argc);
+	if (ft_thread_create(&table, argc) == -1)
+	{
+		death_cert(&table);
+	}
 	ft_thread_join(&table, argc);
 	ft_mutex_destroy(&table);
 	free (table.philo_list);
