@@ -12,12 +12,19 @@
 
 #include "../include/philosopher.h"
 
-void	philo_update(t_philo *philo)
+int	brainstorm(struct s_philo *philo, int forks)
 {
-	pthread_mutex_lock(&philo->pmutex);
-	philo->meal_count++;
-	philo->last_meal = timestamp_ms();
-	pthread_mutex_unlock(&philo->pmutex);
+	int	res;
+
+	res = 1;
+	if (death_check(philo->table) == -1)
+	{
+		res = -1;
+		pthread_mutex_unlock(philo->fork_one);
+		if (forks == 2)
+			pthread_mutex_unlock(philo->fork_two);
+	}
+	return (res);
 }
 
 //make function for lock and print messages
@@ -27,24 +34,16 @@ void	philo_eat(t_philo *philo)
 	if (death_check(philo->table) == -1)
 		return ;
 	pthread_mutex_lock(philo->fork_one);
-	if (death_check(philo->table) == -1)
-	{
-		pthread_mutex_unlock(philo->fork_one);
+	if (brainstorm(philo, 1) == -1)
 		return ;
-	}
 	ft_mutex_print_fork(philo);
-	if (death_check(philo->table) == -1)
-	{
-		pthread_mutex_unlock(philo->fork_one);
+	if (philo->philo_count == 1)
+		usleep((philo->philo_life + 100) * 1000);
+	if (brainstorm(philo, 1) == -1)
 		return ;
-	}
 	pthread_mutex_lock(philo->fork_two);
-	if (death_check(philo->table) == -1)
-	{
-		pthread_mutex_unlock(philo->fork_one);
-		pthread_mutex_unlock(philo->fork_two);
+	if (brainstorm(philo, 2) == -1)
 		return ;
-	}
 	ft_mutex_print_eating(philo);
 	philo_update(philo);
 	usleep(philo->philo_meal * 1000);
@@ -72,15 +71,15 @@ void	start_delay(t_philo *philo)
 	if (philo->philo_count % 2 == 0)
 	{
 		if (philo->num % 2 == 0)
-			usleep(1000);
+			usleep(philo->philo_meal * 100);
 	}
-	else
+	else if (philo->philo_count > 2)
 	{
 		if (philo->num % 2 == 0)
-			usleep(50);
+			usleep(philo->philo_meal * 100);
 		else if (philo->num % 3 == 0)
 		{
-			usleep(100);
+			usleep(philo->philo_meal * 1000);
 		}
 	}
 }

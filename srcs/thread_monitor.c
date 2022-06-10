@@ -12,7 +12,6 @@
 
 #include "../include/philosopher.h"
 
-//moniteur de mort de faim/starve_monitor probablement DONE
 void	*ft_starve_monitor(void *ptr)
 {
 	t_table	*table;
@@ -25,23 +24,21 @@ void	*ft_starve_monitor(void *ptr)
 		while (x < table->philo_count && death_check(table) == 1)
 		{
 			if (death_check(table) == -1)
-				return ;
+				return (0);
 			if (check_last_meal_time(&table->philo_list[x]) == -1)
 			{
 				ft_mutex_print_death(&table->philo_list[x]);
 				death_cert(table);
-				return ;
+				return (0);
 			}
 			x++;
 		}
 		if (death_check(table) == -1)
-			return ;
-		x = 1;
+			return (0);
+		x = 0;
 	}
 }
 
-//moniteur de nombre de repas pour tout les philo, meal_monitor TO_TWEAK
-//sleep time to tweak!!
 void	*ft_meal_monitor(void *ptr)
 {
 	t_table	*table;
@@ -52,14 +49,14 @@ void	*ft_meal_monitor(void *ptr)
 	while (x <= table->philo_count && death_check(table) == 1)
 	{
 		if (death_check(table) == -1)
-			return ;
+			return (0);
 		if (last_meal_check(&table->philo_list[x]) == 1)
 			x++;
 		else
 			usleep(100);
 	}
 	if (death_check(table) == -1)
-		return ;
+		return (0);
 	death_cert(table);
-	return ;
+	return (0);
 }

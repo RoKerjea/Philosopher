@@ -12,13 +12,21 @@
 
 #include "../include/philosopher.h"
 
+void	philo_update(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->pmutex);
+	philo->meal_count++;
+	philo->last_meal = timestamp_ms();
+	pthread_mutex_unlock(&philo->pmutex);
+}
+
 int	check_last_meal_time(t_philo *philo)
 {
 	long long	now;
 	int			res;
 
 	res = 1;
-	now = runtime(philo);
+	now = timestamp_ms();
 	pthread_mutex_lock(&philo->pmutex);
 	if (now - philo->last_meal >= philo->philo_life)
 		res = -1;

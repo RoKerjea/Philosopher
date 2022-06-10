@@ -71,6 +71,7 @@ int				parameter_table(int argc, char **argv, t_table *table);
 long long		timestamp_ms(void);
 long long		runtime(struct s_philo *philo);
 int				check_last_meal_time(t_philo *philo);
+void			philo_update(t_philo *philo);
 
 //THREAD_MONITOR.C
 void			*ft_starve_monitor(void *ptr);
@@ -85,6 +86,9 @@ int				last_meal_check(t_philo *philo);
 int				stop_condition(t_philo *philo);
 void			*ft_start_thread_philo(void *ptr);
 
+//PHILO_CREATE.C
+int				create_start_philo(t_table *table);
+
 //MUTEX_PRINT.C
 
 void			ft_mutex_print_sleep(t_philo *philo);
@@ -92,26 +96,5 @@ void			ft_mutex_print_fork(t_philo *philo);
 void			ft_mutex_print_think(t_philo *philo);
 void			ft_mutex_print_eating(t_philo *philo);
 void			ft_mutex_print_death(t_philo *philo);
-
-//TO DELETE
-void			testparam(t_table *table);
-void			ft_test_philo_data(t_philo *philo);
-/*
-int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);
-int pthread_join(pthread_t thread, void **retval);
-int pthread_detach(pthread_t thread);
-
-int pthread_mutex_destroy(pthread_mutex_t *mutex);
-int pthread_mutex_init(pthread_mutex_t *restrict mutex, const pthread_mutexattr_t *restrict attr);
-
-int pthread_mutex_lock(pthread_mutex_t *mutex);
-int pthread_mutex_unlock(pthread_mutex_t *mutex);
-
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-void *memset(void *s, int c, size_t n);
-int gettimeofday(struct timeval *tv, struct timezone *tz);
-int usleep(useconds_t usec);
-*/
 
 #endif

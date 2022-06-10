@@ -21,7 +21,6 @@ void	testparam(t_table *table)
 	printf("sleep time = %d\n", table->philo_sleep);
 	printf("max meal = %d\n", table->philo_max_meal);
 	printf("death? = %d\n", table->death);
-
 	return ;
 }
 

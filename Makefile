@@ -27,10 +27,10 @@ _IWHITE=$'\033[47m
 SRCS		=	${addprefix srcs/, \
 				philomain.c \
 				philo_loop.c \
+				philo_create.c \
 				time.c \
 				thread_monitor.c \
 				mutex_print.c \
-				test.c \
 				stop.c \
 				parsing.c}
 
