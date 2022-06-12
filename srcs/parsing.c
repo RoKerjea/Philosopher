@@ -32,7 +32,7 @@ int	checkarg(char *str)
 			j++;
 		i++;
 	}
-	if (j == 0 || j >= 11)
+	if (j == 0 || j >= 11 || ft_strlen(str) == 0)
 		return (-1);
 	l = ft_atol(str);
 	if (l < 0 || l > 2147483647)
