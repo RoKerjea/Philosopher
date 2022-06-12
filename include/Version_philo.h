@@ -13,6 +13,6 @@
 #ifndef VERSION_PHILO_H
 # define VERSION_PHILO_H
 # define MAJOR_VERSION "1"
-# define MINOR_VERSION "5"
-# define BUILD_DATE "12 06 2022 13h46 CEST"
+# define MINOR_VERSION "6"
+# define BUILD_DATE "12 06 2022 16h40 CEST"
 #endif

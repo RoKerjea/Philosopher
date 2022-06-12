@@ -32,8 +32,11 @@ void	ft_thread_join(t_table *table, int argc)
 	int	i;
 
 	i = 0;
-	while (i++ < table->philo_count)
+	while (i < table->philo_count)
+	{
 		pthread_join(table->philo_list[i].thread_id, NULL);
+		i++;
+	}
 	pthread_join(table->monitor_id[0], NULL);
 	if (argc == 6)
 		pthread_join(table->monitor_id[1], NULL);
@@ -94,6 +97,6 @@ int	main(int argc, char **argv)
 		death_cert(&table);
 	ft_thread_join(&table, argc);
 	ft_mutex_destroy(&table);
-	clean(&table);
+	//clean(&table);
 	return (0);
 }

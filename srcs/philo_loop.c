@@ -12,7 +12,7 @@
 
 #include "../include/philosopher.h"
 
-int	brainstorm(struct s_philo *philo, int forks)
+int	fork_release(struct s_philo *philo, int forks)
 {
 	int	res;
 
@@ -32,15 +32,15 @@ void	philo_eat(t_philo *philo)
 	if (death_check(philo->table) == -1)
 		return ;
 	pthread_mutex_lock(philo->fork_one);
-	if (brainstorm(philo, 1) == -1)
+	if (fork_release(philo, 1) == -1)
 		return ;
 	ft_mutex_print_fork(philo);
 	if (philo->philo_count == 1)
 		usleep((philo->philo_life + 100) * 1000);
-	if (brainstorm(philo, 1) == -1)
+	if (fork_release(philo, 1) == -1)
 		return ;
 	pthread_mutex_lock(philo->fork_two);
-	if (brainstorm(philo, 2) == -1)
+	if (fork_release(philo, 2) == -1)
 		return ;
 	ft_mutex_print_eating(philo);
 	philo_update(philo);
@@ -76,9 +76,7 @@ void	start_delay(t_philo *philo)
 		if (philo->num % 2 == 0)
 			usleep(philo->philo_meal * 100);
 		else if (philo->num % 3 == 0)
-		{
 			usleep(philo->philo_meal * 1000);
-		}
 	}
 }
 
