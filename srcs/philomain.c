@@ -97,6 +97,6 @@ int	main(int argc, char **argv)
 		death_cert(&table);
 	ft_thread_join(&table, argc);
 	ft_mutex_destroy(&table);
-	//clean(&table);
+	clean(&table);
 	return (0);
 }

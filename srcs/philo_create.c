@@ -55,7 +55,6 @@ int	ft_pmutex(t_table *table)
 	return (1);
 }
 
-//To protect create AND mutex init
 int	create_start_philo(t_table *table)
 {
 	int	i;
