@@ -54,7 +54,10 @@ void	philo_sleep(t_philo *philo)
 	if (death_check(philo->table) == -1)
 		return ;
 	ft_mutex_print_sleep(philo);
-	usleep(philo->philo_sleep * 1000);
+	if (philo->philo_sleep > philo->philo_life)
+		usleep(philo->philo_life * 1000);
+	else
+		usleep(philo->philo_sleep * 1000);
 	if (death_check(philo->table) == -1)
 		return ;
 	ft_mutex_print_think(philo);

@@ -35,7 +35,7 @@ int	checkarg(char *str)
 	if (j == 0 || j >= 11)
 		return (-1);
 	l = ft_atol(str);
-	if (l < -2147483648 || l > 2147483647)
+	if (l < 0 || l > 2147483647)
 		return (-1);
 	return (1);
 }
@@ -51,6 +51,8 @@ int	parameter_table(int argc, char **argv, t_table *table)
 			return (-1);
 		i++;
 	}
+	if (ft_atol(argv[1]) == 0)
+		return (-1);
 	table->philo_count = ft_atol(argv[1]);
 	table->philo_life = ft_atol(argv[2]);
 	table->philo_meal = ft_atol(argv[3]);

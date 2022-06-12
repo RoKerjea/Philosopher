@@ -29,6 +29,7 @@ SRCS		=	${addprefix srcs/, \
 				philo_loop.c \
 				philo_create.c \
 				time.c \
+				problem_manager.c \
 				thread_monitor.c \
 				mutex_print.c \
 				stop.c \

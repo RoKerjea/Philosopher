@@ -96,4 +96,8 @@ void			ft_mutex_print_think(t_philo *philo);
 void			ft_mutex_print_eating(t_philo *philo);
 void			ft_mutex_print_death(t_philo *philo);
 
+//PROBLEM_MANAGER.C
+void			mutex_clean(t_table *table, int i);
+void			clean(t_table *table);
+
 #endif
