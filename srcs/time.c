@@ -51,3 +51,13 @@ long long	runtime(struct s_philo *philo)
 	res = timestamp_ms() - philo->start_time;
 	return (res);
 }
+
+void	ft_start(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->table->death_auth);
+	pthread_mutex_unlock(&philo->table->death_auth);
+	pthread_mutex_lock(&philo->pmutex);
+	philo->start_time = philo->table->start_time;
+	philo->last_meal = philo->table->start_time;
+	pthread_mutex_unlock(&philo->pmutex);
+}

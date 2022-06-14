@@ -12,17 +12,22 @@
 
 #include "../include/philosopher.h"
 
-void	mutex_clean(t_table *table, int i)
+int	mutex_clean(t_table *table, int i)
 {
 	while (i >= 0)
 	{
 		pthread_mutex_destroy(&table->forks[i]);
 		i--;
 	}
+	if (table->forks != 0)
+		free (table->forks);
+	return (-1);
 }
 
 void	clean(t_table *table)
 {
 	if (table->philo_list != 0)
 		free (table->philo_list);
+	if (table->forks != 0)
+		free (table->forks);
 }

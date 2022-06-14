@@ -50,7 +50,7 @@ typedef struct s_table
 	int				philo_max_meal;
 	int				death;
 	pthread_mutex_t	death_auth;
-	pthread_mutex_t	forks[300];
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 	struct s_philo	*philo_list;
 	pthread_t		monitor_id[2];
@@ -72,6 +72,7 @@ long long		timestamp_ms(void);
 long long		runtime(struct s_philo *philo);
 int				check_last_meal_time(t_philo *philo);
 void			philo_update(t_philo *philo);
+void			ft_start(t_philo *philo);
 
 //THREAD_MONITOR.C
 void			*ft_starve_monitor(void *ptr);
@@ -97,7 +98,7 @@ void			ft_mutex_print_eating(t_philo *philo);
 void			ft_mutex_print_death(t_philo *philo);
 
 //PROBLEM_MANAGER.C
-void			mutex_clean(t_table *table, int i);
+int				mutex_clean(t_table *table, int i);
 void			clean(t_table *table);
 
 #endif

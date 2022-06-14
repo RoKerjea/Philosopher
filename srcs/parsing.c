@@ -44,12 +44,11 @@ int	parameter_table(int argc, char **argv, t_table *table)
 {
 	int	i;
 
-	i = 1;
-	while (i < argc)
+	i = 0;
+	while (++i < argc)
 	{
 		if (checkarg(argv[i]) == -1)
 			return (-1);
-		i++;
 	}
 	if (ft_atol(argv[1]) == 0)
 		return (-1);
@@ -58,10 +57,14 @@ int	parameter_table(int argc, char **argv, t_table *table)
 	table->philo_meal = ft_atol(argv[3]);
 	table->philo_sleep = ft_atol(argv[4]);
 	if (argc == 6)
+	{
+		if (ft_atol(argv[5]) == 0)
+			return (-1);
 		table->philo_max_meal = ft_atol(argv[5]);
+	}
 	else
 		table->philo_max_meal = -1;
 	table->death = 0;
-	table->start_time = timestamp_ms();
+	//table->start_time = timestamp_ms();
 	return (1);
 }

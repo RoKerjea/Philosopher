@@ -44,7 +44,10 @@ void	philo_eat(t_philo *philo)
 		return ;
 	ft_mutex_print_eating(philo);
 	philo_update(philo);
-	usleep(philo->philo_meal * 1000);
+	if (philo->philo_meal > philo->philo_life)
+		usleep(philo->philo_life * 1000);
+	else
+		usleep(philo->philo_meal * 1000);
 	pthread_mutex_unlock(philo->fork_one);
 	pthread_mutex_unlock(philo->fork_two);
 }
@@ -69,14 +72,14 @@ void	start_delay(t_philo *philo)
 	if (philo->philo_count % 2 == 0)
 	{
 		if (philo->num % 2 == 0)
-			usleep(philo->philo_meal * 100);
+			usleep(5 * 1000);
 	}
 	else if (philo->philo_count > 2)
 	{
 		if (philo->num % 2 == 0)
-			usleep(philo->philo_meal * 100);
+			usleep(5 * 1000);
 		else if (philo->num % 3 == 0)
-			usleep(philo->philo_meal * 1000);
+			usleep(8 * 1000);
 	}
 }
 
@@ -85,6 +88,7 @@ void	*ft_start_thread_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *) ptr;
+	ft_start(philo);
 	start_delay(philo);
 	while (death_check(philo->table) == 1)
 	{
