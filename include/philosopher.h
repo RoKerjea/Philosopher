@@ -61,6 +61,7 @@ typedef struct s_table
 long			ft_atol(const char *str);
 char			**ft_split(char const *s, char c);
 char			*ft_strdup(const char *s1);
+char			**ft_freetab(char **tab);
 unsigned long	ft_strlen(const char *s);
 
 //PARSING.C//
