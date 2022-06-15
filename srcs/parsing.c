@@ -65,6 +65,6 @@ int	parameter_table(int argc, char **argv, t_table *table)
 	else
 		table->philo_max_meal = -1;
 	table->death = 0;
-	//table->start_time = timestamp_ms();
+	table->start_time = timestamp_ms();
 	return (1);
 }

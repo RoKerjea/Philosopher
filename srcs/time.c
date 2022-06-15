@@ -52,12 +52,18 @@ long long	runtime(struct s_philo *philo)
 	return (res);
 }
 
-void	ft_start(t_philo *philo)
+void	action_time(t_philo *philo, int action)
 {
-	pthread_mutex_lock(&philo->table->death_auth);
-	pthread_mutex_unlock(&philo->table->death_auth);
-	pthread_mutex_lock(&philo->pmutex);
-	philo->start_time = philo->table->start_time;
-	philo->last_meal = philo->table->start_time;
-	pthread_mutex_unlock(&philo->pmutex);
+	long long	start;
+	long long	task;
+
+	if (action == 1)
+		task = philo->philo_meal;
+	else
+		task = philo->philo_sleep;
+	start = timestamp_ms();
+	while (death_check(philo->table) != -1 && timestamp_ms() - start < task)
+	{
+		usleep(1000);
+	}
 }

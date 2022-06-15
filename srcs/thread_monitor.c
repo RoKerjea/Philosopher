@@ -19,8 +19,6 @@ void	*ft_starve_monitor(void *ptr)
 
 	x = 0;
 	table = (t_table *) ptr;
-	pthread_mutex_lock(&table->death_auth);
-	pthread_mutex_unlock(&table->death_auth);
 	while (death_check(table) != -1)
 	{
 		while (x < table->philo_count && death_check(table) == 1)
@@ -47,16 +45,14 @@ void	*ft_meal_monitor(void *ptr)
 
 	x = 0;
 	table = (t_table *) ptr;
-	pthread_mutex_lock(&table->death_auth);
-	pthread_mutex_unlock(&table->death_auth);
 	while (x < table->philo_count && death_check(table) == 1)
 	{
 		if (death_check(table) == -1)
 			return (0);
 		if (last_meal_check(&table->philo_list[x]) == 1)
 			x++;
-		/*else
-			usleep(1000);*/
+		else
+			usleep(100);
 	}
 	if (death_check(table) == -1)
 		return (0);

@@ -72,7 +72,7 @@ long long		timestamp_ms(void);
 long long		runtime(struct s_philo *philo);
 int				check_last_meal_time(t_philo *philo);
 void			philo_update(t_philo *philo);
-void			ft_start(t_philo *philo);
+void			action_time(t_philo *philo, int action);
 
 //THREAD_MONITOR.C
 void			*ft_starve_monitor(void *ptr);

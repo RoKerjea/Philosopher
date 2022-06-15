@@ -36,7 +36,7 @@ void	philo_eat(t_philo *philo)
 		return ;
 	ft_mutex_print_fork(philo);
 	if (philo->philo_count == 1)
-		usleep((philo->philo_life + 100) * 1000);
+		usleep((philo->philo_life + 2) * 1000);
 	if (fork_release(philo, 1) == -1)
 		return ;
 	pthread_mutex_lock(philo->fork_two);
@@ -44,10 +44,7 @@ void	philo_eat(t_philo *philo)
 		return ;
 	ft_mutex_print_eating(philo);
 	philo_update(philo);
-	if (philo->philo_meal > philo->philo_life)
-		usleep(philo->philo_life * 1000);
-	else
-		usleep(philo->philo_meal * 1000);
+	action_time(philo, 1);
 	pthread_mutex_unlock(philo->fork_one);
 	pthread_mutex_unlock(philo->fork_two);
 }
@@ -57,10 +54,7 @@ void	philo_sleep(t_philo *philo)
 	if (death_check(philo->table) == -1)
 		return ;
 	ft_mutex_print_sleep(philo);
-	if (philo->philo_sleep > philo->philo_life)
-		usleep(philo->philo_life * 1000);
-	else
-		usleep(philo->philo_sleep * 1000);
+	action_time(philo, 2);
 	if (death_check(philo->table) == -1)
 		return ;
 	ft_mutex_print_think(philo);
@@ -88,7 +82,6 @@ void	*ft_start_thread_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *) ptr;
-	ft_start(philo);
 	start_delay(philo);
 	while (death_check(philo->table) == 1)
 	{

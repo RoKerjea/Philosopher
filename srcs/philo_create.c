@@ -33,7 +33,7 @@ void	ft_philo_attributes(t_table *table, int i)
 {
 	table->philo_list[i].num = i + 1;
 	table->philo_list[i].meal_count = 0;
-	//table->philo_list[i].start_time = table->start_time;
+	table->philo_list[i].start_time = table->start_time;
 	table->philo_list[i].philo_count = table->philo_count;
 	table->philo_list[i].philo_life = table->philo_life;
 	table->philo_list[i].philo_meal = table->philo_meal;
@@ -42,7 +42,7 @@ void	ft_philo_attributes(t_table *table, int i)
 	table->philo_list[i].print = &table->print;
 	table->philo_list[i].death_auth = &table->death_auth;
 	table->philo_list[i].table = table;
-	//table->philo_list[i].last_meal = table->start_time;
+	table->philo_list[i].last_meal = table->start_time;
 }
 
 int	ft_pmutex(t_table *table)

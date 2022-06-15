@@ -44,7 +44,6 @@ void	ft_thread_join(t_table *table, int argc)
 
 int	ft_thread_create(t_table *table, int argc)
 {
-	pthread_mutex_lock(&table->death_auth);
 	if (create_start_philo(table) == -1)
 		return (-1);
 	if (pthread_create(&table->monitor_id[0], NULL,
@@ -53,9 +52,7 @@ int	ft_thread_create(t_table *table, int argc)
 	if (argc == 6)
 		if (pthread_create(&table->monitor_id[1], NULL,
 				ft_meal_monitor, table) != 0)
-			return (-1);	
-	table->start_time = timestamp_ms();
-	pthread_mutex_unlock(&table->death_auth);
+			return (-1);
 	return (1);
 }
 
