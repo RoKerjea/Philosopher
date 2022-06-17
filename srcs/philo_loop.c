@@ -58,6 +58,8 @@ void	philo_sleep(t_philo *philo)
 	if (death_check(philo->table) == -1)
 		return ;
 	ft_mutex_print_think(philo);
+	if (philo->philo_count % 2 == 1)
+		usleep ((philo->philo_meal / 2) * 1000);
 	return ;
 }
 
@@ -66,14 +68,14 @@ void	start_delay(t_philo *philo)
 	if (philo->philo_count % 2 == 0)
 	{
 		if (philo->num % 2 == 0)
-			usleep(5 * 1000);
+			usleep(30 * 1000);
 	}
-	else if (philo->philo_count > 2)
+	else if (philo->philo_count % 2 == 1)
 	{
-		if (philo->num % 2 == 0)
-			usleep(5 * 1000);
+		if (philo->num % 3 == 2)
+			usleep(30 * 1000);
 		else if (philo->num % 3 == 0)
-			usleep(8 * 1000);
+			usleep(60 * 1000);
 	}
 }
 

@@ -64,6 +64,6 @@ void	action_time(t_philo *philo, int action)
 	start = timestamp_ms();
 	while (death_check(philo->table) != -1 && timestamp_ms() - start < task)
 	{
-		usleep(1000);
+		usleep(500);
 	}
 }

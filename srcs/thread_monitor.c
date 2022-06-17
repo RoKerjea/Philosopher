@@ -33,6 +33,7 @@ void	*ft_starve_monitor(void *ptr)
 			}
 			x++;
 		}
+		usleep(500);
 		x = 0;
 	}
 	return (0);
@@ -52,7 +53,7 @@ void	*ft_meal_monitor(void *ptr)
 		if (last_meal_check(&table->philo_list[x]) == 1)
 			x++;
 		else
-			usleep(100);
+			usleep(1000);
 	}
 	if (death_check(table) == -1)
 		return (0);

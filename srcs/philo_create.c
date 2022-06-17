@@ -17,15 +17,15 @@ void	fork_choice(t_table *table, struct s_philo *philo)
 	int	num;
 
 	num = philo->num;
-	if (num % 2 == 0)
-	{
-		philo->fork_one = &table->forks[num - 1];
-		philo->fork_two = &table->forks[num % table->philo_count];
-	}
-	else
+	if (num % 2 == 1)
 	{
 		philo->fork_two = &table->forks[num - 1];
 		philo->fork_one = &table->forks[num % table->philo_count];
+	}
+	else
+	{
+		philo->fork_one = &table->forks[num - 1];
+		philo->fork_two = &table->forks[num % table->philo_count];
 	}
 }
 
