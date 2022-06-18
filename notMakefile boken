@@ -24,6 +24,11 @@ _IPURPLE=$'\033[45m
 _ICYAN=$'\033[46m
 _IWHITE=$'\033[47m
 
+DIRS = srcs
+SOURCEDIRS = $(foreach dir, $(DIRS), $(addprefix ./, $(dir)))
+BUILDDIRS = $(foreach dir, $(SOURCEDIRS), $(addsuffix /build, $(dir)))
+VPATH = $(SOURCEDIRS)
+
 SRCS		=	${addprefix srcs/, \
 				philomain.c \
 				philo_loop.c \
@@ -46,15 +51,17 @@ RM			= rm -rf
 NAME		= philo
 CC			= gcc $(CFLAGS)
 
-OBJECTS = $(subst /,/build/,${SRCS:.c=.o})
-DEPEND	= ${OBJECTS:.o=.d}
+#OBJECTS_SRC	= $(subst /,/build/,${SRCS:.c=.o})
 
+OBJECTS_SRC	= ${SRCS:srcs/%.c=srcs/build/%.o}
+DEPEND_SRC	= ${SRCS:srcs/%.c=srcs/build/%.d}
+
+#OBJECTS_LIB	= ${LIB:not_libft/%.c=not_libft/build/%.o}
+#DEPEND_LIB	= ${LIB:not_libft/%.c=not_libft/build/%.d}
+
+OBJECTS		= $(OBJECTS_SRC)
+DEPEND		= $(DEPEND_SRC)
 CFLAGS		= -Wall -Werror -Wextra -lpthread -pthread
-
-all:	printstart $(NAME)
-
-printstart :
-	@echo "${_UNDER}${_RED}"Creating Objects Directories"${_END}"
 
 ${NAME}:	${OBJECTS}
 	@echo "${_UNDER}${_RED}Creating Executable${_END}"
@@ -63,13 +70,48 @@ ${NAME}:	${OBJECTS}
 
 -include ${DEPEND}
 
-${OBJECTS}: $(subst .o,.c,$(subst /build/,/,$@))
-	@if [ ! -d "./$(dir $@)" ]; then\
-		echo "${_BOLD}${_UNDER}${_BLUE}"mkdir -p $(dir $@)"${_END}";\
-		mkdir -p $(dir $@);\
+all:	$(NAME)
+
+
+test :
+	@echo "$(OBJECTS)"
+	@echo "$(SRCS)"
+	@echo "$(subst /build/,/,${OBJECTS})"
+	@echo "$(subst .o,.c,$(subst /build/,/,${OBJECTS}))"
+
+
+${OBJECTS_SRC} : ${SRCS} build
+	@echo "${_BOLD}${_BLUE}"$(CC) -MMD -c $< -o $@"${_END}"
+	@$(CC) -MMD -c $< -o $@
+
+
+build :
+	@if [ ! -d "./srcs/build" ]; then\
+		echo "${_BOLD}${_UNDER}${_BLUE}"mkdir -p srcs/build"${_END}";\
+		mkdir -p srcs/build;\
 	fi
-	@echo "${_BOLD}${_BLUE}"$(CC) -MMD -c $(subst .o,.c,$(subst /build/,/,$@)) -o $@"${_END}"
-	@$(CC) -MMD -c $(subst .o,.c,$(subst /build/,/,$@)) -o $@
+	@if [ ! -d "./not_libft/build" ]; then\
+		echo "${_BOLD}${_UNDER}${_BLUE}"mkdir -p not_libft/build"${_END}";\
+		mkdir -p not_libft/build;\
+	fi
+
+
+srcs/build/%.o: srcs/%.c $(HEADER)
+	@if [ ! -d "./srcs/build" ]; then\
+		echo "${_UNDER}${_RED}Creating Objects and Dependencies${_END}";\
+		echo "${_BOLD}${_UNDER}${_BLUE}"mkdir -p srcs/build"${_END}";\
+		mkdir -p srcs/build;\
+	fi
+	@echo "${_BOLD}${_BLUE}"$(CC) -MMD -c $< -o $@"${_END}"
+	@$(CC) -MMD -c $< -o $@
+
+not_libft/build/%.o: not_libft/%.c $(HEADER)
+	@if [ ! -d "./not_libft/build" ]; then\
+		echo "${_BOLD}${_UNDER}${_BLUE}"mkdir -p not_libft/build"${_END}";\
+		mkdir -p not_libft/build;\
+	fi
+	@echo "${_BOLD}${_BLUE}"$(CC) -MMD -c $< -o $@"${_END}"
+	@$(CC) -MMD -c $< -o $@
 
 clean:
 	@echo "${_UNDER}${_RED}Deleting Objects and Dependencies${_END}"
@@ -104,4 +146,4 @@ git: fclean
 	git push
 re:			fclean all
 
-.PHONY:		all clean fclean re gitm git printstart
+.PHONY:		all clean fclean re
