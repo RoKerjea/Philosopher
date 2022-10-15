@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   philomain.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rokerjea <rokerjea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:33:18 by rokerjea          #+#    #+#             */
-/*   Updated: 2022/05/13 14:33:20 by rokerjea         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:48:09 by rokerjea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosopher.h"
 
+/*Toutes les fonctions de setup sont soit appellees soit ecrites ici
+et appellees par la fonction main*/
+
+/*destructeur de tout les mutex de tout le projet, soit appellee a la fin 
+du programme, soit si il ya un probleme pendant la fonction mutex init
+pour s'interrompre de facon "clean"*/
 void	ft_mutex_destroy(t_table *table)
 {
 	int	i;
@@ -27,6 +33,8 @@ void	ft_mutex_destroy(t_table *table)
 	pthread_mutex_destroy(&table->death_auth);
 }
 
+/*fonction "d'attente" des thread, une fois que le main a fini sa partie
+afin d'attendre que tt les threads aient fini avant de quitter le programme*/
 void	ft_thread_join(t_table *table, int argc)
 {
 	int	i;
@@ -42,12 +50,14 @@ void	ft_thread_join(t_table *table, int argc)
 		pthread_join(table->monitor_id[1], NULL);
 }
 
+/*fonction pour creer TOUT les threads utilises dans le programme, 
+et les envoyer dans leurs fonctions de routine*/
 int	ft_thread_create(t_table *table, int argc)
 {
 	if (create_start_philo(table) == -1)
 		return (-1);
 	if (pthread_create(&table->monitor_id[0], NULL,
-			ft_starve_monitor, table) != 0)
+				ft_starve_monitor, table) != 0)
 		return (-1);
 	if (argc == 6)
 		if (pthread_create(&table->monitor_id[1], NULL,
@@ -56,6 +66,11 @@ int	ft_thread_create(t_table *table, int argc)
 	return (1);
 }
 
+/*initialisation de tout les mutex necessaires pour le projet :
+un par fork, 
+un par philosopher(pour le time since last meal, et le compte de repas),
+un pour print
+et un pour signaler une condition d'arret(death)*/
 int	ft_mutex_init(t_table *table)
 {
 	int	i;
@@ -80,6 +95,13 @@ int	ft_mutex_init(t_table *table)
 	return (1);
 }
 
+/*fonction main
+verifie les arguments et les assignent a la structure principale (table)
+initialise les mutex
+cree les threads
+attends leurs resolution
+detruit les mutex
+et detruit les donnees sur la heap avant de cloturer le programme*/
 int	main(int argc, char **argv)
 {
 	t_table	table;

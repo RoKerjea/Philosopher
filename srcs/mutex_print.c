@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   mutex_print.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rokerjea <rokerjea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 19:57:53 by rokerjea          #+#    #+#             */
-/*   Updated: 2022/06/07 19:57:55 by rokerjea         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:40:12 by rokerjea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosopher.h"
+
+/*tte les fonctions pour print les messages de changement d'etat
+des philosopher, ave mutex lock et unlock immediatement avant et apres*/
 
 void	ft_mutex_print_sleep(t_philo *philo)
 {

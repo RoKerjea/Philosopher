@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   problem_manager.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rokerjea <rokerjea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 18:58:22 by rokerjea          #+#    #+#             */
-/*   Updated: 2022/06/10 18:58:24 by rokerjea         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:07:40 by rokerjea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosopher.h"
+
+/*fonctions de nettoyage pour cloturer le programme proprement*/
 
 int	mutex_clean(t_table *table, int i)
 {

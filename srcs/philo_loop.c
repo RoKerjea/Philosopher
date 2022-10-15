@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   philo_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rokerjea <rokerjea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 19:58:04 by rokerjea          #+#    #+#             */
-/*   Updated: 2022/06/07 19:58:08 by rokerjea         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:55:00 by rokerjea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosopher.h"
 
+/*routine des philos*/
+
+/*verifie si mort et relache fourchettes en main si il y en a dans ce cas*/
 int	fork_release(struct s_philo *philo, int forks)
 {
 	int	res;
@@ -27,6 +30,8 @@ int	fork_release(struct s_philo *philo, int forks)
 	return (res);
 }
 
+/*fonction de repas, check for death avant chaque action,
+update timestamp de dernier repas avant */
 void	philo_eat(t_philo *philo)
 {
 	if (death_check(philo->table) == -1)

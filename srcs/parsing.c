@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rokerjea <rokerjea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:33:24 by rokerjea          #+#    #+#             */
-/*   Updated: 2022/05/13 14:33:25 by rokerjea         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:59:39 by rokerjea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosopher.h"
 
+
+/*verifie les arguments pour s'assurer qu'ils sont valides pour ce programme*/
 int	checkarg(char *str)
 {
 	int		i;
@@ -40,6 +42,8 @@ int	checkarg(char *str)
 	return (1);
 }
 
+/*assigne les parametres a la structure table et
+renvoi -1 ou 1 suivant si ca a echoue ou reussi*/
 int	parameter_table(int argc, char **argv, t_table *table)
 {
 	int	i;

@@ -41,20 +41,29 @@ SRCS		=	${addprefix srcs/, \
 				ft_strlen.c \
 				ft_freetab.c}
 
+
 HEADER		= include/philosopher.h
 RM			= rm -rf
 NAME		= philo
 CC			= gcc $(CFLAGS)
 
 OBJECTS = $(subst /,/build/,${SRCS:.c=.o})
+#OBJECTS = ${SRCS:%.c=.build/%.o}
 DEPEND	= ${OBJECTS:.o=.d}
 
 CFLAGS		= -Wall -Werror -Wextra -lpthread -pthread
 
-all:	printstart $(NAME)
+
+all:	$(NAME)  printstart printfirst
 
 printstart :
 	@echo "${_UNDER}${_RED}"Creating Objects Directories"${_END}"
+
+printfirst:
+	@echo "${_UNDER}${_YELLOW}"I\'m first!"${_END}"
+	touch $@
+	ls -la
+
 
 ${NAME}:	${OBJECTS}
 	@echo "${_UNDER}${_RED}Creating Executable${_END}"
@@ -62,6 +71,14 @@ ${NAME}:	${OBJECTS}
 	@${CC} -o ${NAME} ${OBJECTS}
 
 -include ${DEPEND}
+
+## src = philo/src/parsing.c		philo/src/%.c  philo/src/titi/prout.c
+## obj = philo/src/build/parsing.o	$(@D)/build/%.o
+## % = parsing						philo/src/titi/build/titi/prout.o
+## $(dir /build/parsing.o) = /build/
+## $(@D) de /build/parsing.o = /build
+
+
 
 ${OBJECTS}: $(subst .o,.c,$(subst /build/,/,$@))
 	@if [ ! -d "./$(dir $@)" ]; then\
@@ -102,6 +119,7 @@ git: fclean
 	git add .
 	git commit -m "V$(MAJ).$(MIN) by $(USER) at $(TIME)"
 	git push
-re:			fclean all
+
+re:	fclean all
 
 .PHONY:		all clean fclean re gitm git printstart

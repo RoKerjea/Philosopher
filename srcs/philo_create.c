@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   philo_create.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rokerjea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rokerjea <rokerjea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 14:17:02 by rokerjea          #+#    #+#             */
-/*   Updated: 2022/06/10 14:17:04 by rokerjea         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:50:34 by rokerjea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosopher.h"
 
+/*tte les fonctions pour creer et parametrer les philos*/
+
+/*assignation des fourchettes aux philos*/
 void	fork_choice(t_table *table, struct s_philo *philo)
 {
 	int	num;
@@ -29,6 +32,7 @@ void	fork_choice(t_table *table, struct s_philo *philo)
 	}
 }
 
+/*parametrage des donnees pour les philos*/
 void	ft_philo_attributes(t_table *table, int i)
 {
 	table->philo_list[i].num = i + 1;
@@ -45,6 +49,8 @@ void	ft_philo_attributes(t_table *table, int i)
 	table->philo_list[i].last_meal = table->start_time;
 }
 
+/*initialisation des mutex individuels par philos
+pour time since last meal et meal count*/
 int	ft_pmutex(t_table *table)
 {
 	int	i;
@@ -63,6 +69,7 @@ int	ft_pmutex(t_table *table)
 	return (1);
 }
 
+/*creation, parametrage et lancment des philos dans leur routines*/
 int	create_start_philo(t_table *table)
 {
 	int	i;
